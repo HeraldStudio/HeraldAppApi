@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 DB_HOST = '127.0.0.1'
 DB_USER = 'root'
-DB_PWD = '084358'
+DB_PWD = ''
 DB_NAME = 'Herald_Api'
 
 
