@@ -54,7 +54,7 @@ class YuyueHandler(BaseHandler):
         retjson = {'code':200,'content':''}
         user = self.get_current_user()
         if not user:
-            retjson['code'] = 400
+            retjson['code'] = 401
             retjson['content'] = u'请先登录'
         else:
             try:
