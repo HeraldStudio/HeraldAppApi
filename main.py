@@ -11,8 +11,11 @@ from mod.auth.login import LoginHandler
 from mod.auth.registerHandler import RegisterHandler
 from mod.yuyue.yuyueHandler import YuyueHandler
 from mod.databases.db import engine
+from mod.huodong.getHuodong import getHuodong
+from mod.huodong.HuodongCommit import HuodongCommit
+from mod.huodong.HuodongLogin import HuodongLogin
 
-define("port", default=8000, help="run on the given port", type=int)
+define("port", default=7000, help="run on the given port", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -20,6 +23,9 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/auth/login',LoginHandler),
             (r'/herald/api/v1/auth/reg',RegisterHandler),
             (r'/herald/api/v1/yuyue',YuyueHandler),
+            (r'/herald/api/v1/huodong/get',getHuodong),
+            (r'/herald/api/v1/huodong/commit',HuodongCommit),
+            (r'/herald/api/v1/huodong/login',HuodongLogin),
             (r'/herald/.*', PageNotFoundHandler)
             ]
         settings = dict(
