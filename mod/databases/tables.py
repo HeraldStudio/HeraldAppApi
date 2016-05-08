@@ -66,6 +66,7 @@ class Activity(Base):
     user        = Column(VARCHAR(256))
     association = Column(VARCHAR(256))
     isvalid     = Column(Boolean(),default=True)
+    ishot       = Column(Boolean(),default=True)
 
     def __str__(self):
         return 'title:{t}\t| association:{a}\t| start:{s}\t| end:{e}'\
