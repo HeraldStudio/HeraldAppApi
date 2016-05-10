@@ -14,6 +14,7 @@ from mod.databases.db import engine
 from mod.huodong.getHuodong import getHuodong
 from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
+from mod.huodong.upload import UploadPichandler
 
 define("port", default=7000, help="run on the given port", type=int)
 
@@ -26,14 +27,15 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/huodong/get',getHuodong),
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),
+            (r'/herald/api/v1/huodong/upload',UploadPichandler),
             (r'/herald/.*', PageNotFoundHandler)
             ]
         settings = dict(
             cookie_secret="8DB90KLP8371B5AEAC5E64C6042415EF",
             template_path=os.path.join(os.path.dirname(__file__), 'templates'),
             static_path=os.path.join(os.path.dirname(__file__), 'static'),
-            debug=False,
-            autoload=False,
+            debug=True,
+            # autoload=True,
             # autoescape=None
         )
         tornado.web.Application.__init__(self, handlers,**settings)

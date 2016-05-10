@@ -16,17 +16,13 @@ class HuodongLogin(BaseHandler):
         self.write_back(retjson)
 
     def get(self):
-        retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write_back(retjson)
+        self.render('HuoLogin.html')
 
     def post(self):
         self.set_header('Access-Control-Allow-Methods','GET')
         self.set_header('Access-Control-Allow-Headers','token')
 
         retjson = {'code':200}
-        header_keys = self.request.headers.keys()
 
         # if the argument is enough
         try:

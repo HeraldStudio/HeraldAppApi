@@ -1,13 +1,16 @@
 __author__ = 'multiangle'
 
-import time,datetime
+import datetime
 
-from tornado.httpclient import HTTPRequest, HTTPClient
-from tornado.httputil import url_concat
 
 from ..Basehandler import BaseHandler
 from ..databases.tables import ActivCommitUser,Activity
 from ..return_code_config import codeTable
+from sqlalchemy.orm.exc import NoResultFound
+
+class HuoException(RuntimeError):
+    def __init__(self,code):
+        self.code = code
 
 class HuodongCommit(BaseHandler):
 
@@ -18,74 +21,82 @@ class HuodongCommit(BaseHandler):
         self.write_back(retjson)
 
     def get(self):
-        retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write_back(retjson)
+        request_cookie = self.get_secure_cookie('ActivityCommitter')
+        state = 1
+        matched_user = None
+        if request_cookie:
+            try:
+                matched_user = self.db.query(ActivCommitUser).filter(ActivCommitUser.cookie == request_cookie).one()
+            except NoResultFound:
+                state = 0
+        else:
+            state = 0
+        if state==1:
+            self.render('commit.html')
+        else:
+            self.redirect('./login')
 
     def post(self):
-        retjson = {'code':200}
+        retjson = {'code':200,'content':'ok'}
         self.set_header('Access-Control-Allow-Methods','GET')
         self.set_header('Access-Control-Allow-Headers','token')
 
-        # check if cookie exists
         try:
-            request_cookie = self.get_secure_cookie('ActivityCommitter').decode('utf8')
-        except:
-            retjson['code'] = 302
-            retjson['content'] = codeTable[302]
-            self.write_back(retjson)
-            return
-
-        # if the cookie is correct
-        try:
-            matched_user = self.db.query(ActivCommitUser).filter(ActivCommitUser.cookie == request_cookie).one()
-        except:
-            retjson['code'] = 302
-            retjson['content'] = codeTable[302]
-            self.write_back(retjson)
-            return
-
-        # if the argument is enough
-        try:
-            start_time  = self.get_argument('start_time')
-            end_time    = self.get_argument('end_time')
-            title       = self.get_argument('title')
-            introduce   = self.get_argument('introduce')
+            # if the argument is enough
+            start_time  = self.get_argument('start_time',default=None)
+            end_time    = self.get_argument('end_time',default=None)
+            activity_time = self.get_argument('activity_time',default=None)
+            title       = self.get_argument('title',default=None)
+            location    = self.get_argument('location',default=None)
+            introduce   = self.get_argument('introduce',default=None)
+            is_hot      = self.get_argument('is_hot',default=False)
+            picurl      = self.get_argument('picurl',default=None)
             detail_url  = self.get_argument('detail_url',None)
-        except:
-            retjson['code'] = 300
-            retjson['content'] = codeTable[300]
-            self.write_back(retjson)
-            return
+            if not(start_time and end_time and title and introduce and location) or len(introduce)>100:
+                retjson['code'] = 300
+                retjson['content'] = codeTable[300]
+            else:
+                # if the argument is correct
+                try:
+                    s = datetime.datetime.strptime(start_time,"%Y-%m-%d")
+                    e = datetime.datetime.strptime(end_time,"%Y-%m-%d")
+                    if s>e :
+                        raise HuoException(409)
+                except:
+                    raise HuoException(409)
 
-        # if the argument is correct
-        try:
-            s = datetime.datetime.strptime(start_time,"%Y-%m-%d %H:%M:%S")
-            e = datetime.datetime.strptime(end_time,"%Y-%m-%d %H:%M:%S")
-            if s>e :
-                retjson['code'] = 409
-                retjson['content'] = codeTable[409]
-                self.write_back(retjson)
-                return
-        except:
-            retjson['code'] = 409
-            retjson['content'] = codeTable[409]
-            self.write_back(retjson)
-            return
-
-        activity = Activity(
-            committime  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            starttime   = start_time,
-            endtime     = end_time,
-            title       = title,
-            introduce   = introduce,
-            detailurl   = detail_url,
-            user        = matched_user.user,
-            association = matched_user.association,
-            isvalid     = True,
-            ishot       = True
-        )
-        self.db.add(activity)
-        self.db.commit()
+                # check if cookie exists
+                request_cookie = self.get_secure_cookie('ActivityCommitter')
+                if request_cookie:
+                    # if the cookie is correct
+                    matched_user = self.db.query(ActivCommitUser).filter(ActivCommitUser.cookie == request_cookie).one()
+                    # insert the data
+                    activity = Activity(
+                        committime  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        starttime   = start_time,
+                        endtime     = end_time,
+                        activitytime= activity_time,
+                        title       = title,
+                        picurl      = picurl,
+                        location    = location,
+                        introduce   = introduce,
+                        detailurl   = detail_url,
+                        user        = matched_user.user,
+                        association = matched_user.association,
+                        isvalid     = True,
+                        ishot       = is_hot
+                    )
+                    self.db.add(activity)
+                    self.db.commit()
+                else:
+                    raise HuoException(302)
+        except HuoException,e:
+            retjson['code'] = e.code
+            retjson['content'] = codeTable[e.code]
+        except NoResultFound:
+            retjson['code'] = 302
+            retjson['content'] = codeTable[302]
+        except Exception,e:
+            retjson['code'] = 500
+            retjson['content'] = str(e)
         self.write_back(retjson)
