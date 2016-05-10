@@ -5,7 +5,6 @@ reload(sys)
 sys.setdefaultencoding( "utf-8" )
 
 from sqlalchemy import Column, Integer, Boolean, VARCHAR, DateTime, ForeignKey
-from sqlalchemy.orm import relationship,backref
 from db import Base
 import datetime
 
@@ -61,10 +60,13 @@ class Activity(Base):
     starttime   = Column(DateTime())
     endtime     = Column(DateTime())
     title       = Column(VARCHAR(128))
-    introduce   = Column(VARCHAR(256))
-    detailurl   = Column(VARCHAR(256))
-    user        = Column(VARCHAR(256))
-    association = Column(VARCHAR(256))
+    picurl      = Column(VARCHAR(128))
+    location    = Column(VARCHAR(128))
+    activitytime= Column(VARCHAR(32))
+    introduce   = Column(VARCHAR(128))
+    detailurl   = Column(VARCHAR(128))
+    user        = Column(VARCHAR(64))
+    association = Column(VARCHAR(128))
     isvalid     = Column(Boolean(),default=True)
     ishot       = Column(Boolean(),default=True)
 
@@ -76,10 +78,10 @@ class ActivCommitUser(Base):
     __tablename__="ActivCommitUser"
 
     id          = Column(Integer,nullable=False,primary_key=True)
-    user        = Column(VARCHAR(256))  # 用户
-    password    = Column(VARCHAR(256))  # 密码
-    association = Column(VARCHAR(256))  # 社团
-    cookie      = Column(VARCHAR(256))  # cookie
+    user        = Column(VARCHAR(64))  # 用户
+    password    = Column(VARCHAR(64))  # 密码
+    association = Column(VARCHAR(128))  # 社团
+    cookie      = Column(VARCHAR(128))  # cookie
     latestLogin = Column(DateTime())    # 上次登录时间
     login_fail_time = Column(Integer)   # 登录失败次数
     isvalid     = Column(Boolean(),default=True)  # 发布活动是否按照基本法

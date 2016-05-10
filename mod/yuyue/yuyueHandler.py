@@ -41,6 +41,7 @@ class YuyueHandler(BaseHandler):
                 request.url = url
             elif data and method=="POST":
                 data = json.loads(data)
+                print data
                 data = urllib.urlencode(data)
                 request.body = data
             # print request.url

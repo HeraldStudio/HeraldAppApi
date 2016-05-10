@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="//cdn.bootcss.com/ionic/1.2.3/css/ionic.min.css" rel="stylesheet">
+    <title>小猴偷米社团活动登录</title>
+    <style type="text/css">
+        .content {
+            margin: 10px;
+            margin-top: 70px;
+        }
+        .list {
+            
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="bar bar-header bar-positive">
+            <h1 class="title">登录</h1>
+        </div>
+        <div class="content">
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" placeholder="用户名" id="user">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="密码" id="pwd">
+                </label>
+            </div>
+            <div id="error_message">
+            </div>
+            <button class="button button-block button-positive" id="login">
+            登录
+            </button>
+        </div>
+
+        <div class="bar bar-footer bar-positive">
+            <h1 class="title">小猴偷米工作室</h1>
+        </div>
+        
+        <!-- <p>11</p> -->
+    </div>
+    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var user = $("#user");
+            var pwd = $("#pwd");
+            var error_message = $("#error_message");
+            var login_button = $("#login");
+            var show_message = function(message){
+                error_message.html("<p>"+message+"</p>");
+                error_message.show();
+            }
+            login_button.click(function(event) {
+                if(user.val().length<1||pwd.length<1){
+                    show_message("用户名密码不能为空");
+                } else {
+                    jQuery.ajax({
+                      url: '',
+                      type: 'POST',
+                      dataType: 'json',
+                      data: {
+                        user: user.val(),
+                        password:pwd.val()
+                      },
+                      success: function(data, textStatus, xhr) {
+                        if(data.code==200){
+                            error_message.hide();
+                            window.location.href="./commit";
+                        } else {
+                            show_message(data.content);
+                        }
+                      },
+                      error: function(xhr, textStatus, errorThrown) {
+                        show_message("网络连接错误");
+                      }
+                    });
+                    
+                }
+            });
+        });
+    </script>
+</body>
+</html>
