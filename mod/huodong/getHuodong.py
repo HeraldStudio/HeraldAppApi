@@ -6,7 +6,7 @@ import time,datetime
 
 from ..Basehandler import BaseHandler
 from ..databases.tables import Activity
-from sqlalchemy import desc,and_
+from sqlalchemy import desc,and_,union
 from tornado.httpclient import HTTPRequest, HTTPClient
 from tornado.httputil import url_concat
 
@@ -29,11 +29,14 @@ class getHuodong(BaseHandler):
             page=1
         THREADS_NUM_EACHPAGE = 10
         start_index = (page-1)*THREADS_NUM_EACHPAGE
-        end_index = page*THREADS_NUM_EACHPAGE-1
-        now = datetime.datetime.now()
+        end_index = page*THREADS_NUM_EACHPAGE
+        now = datetime.datetime.strptime(datetime.datetime.today().strftime("%Y-%m-%d"),"%Y-%m-%d")
+        print now
         try:
             if type=='alive':
-                data = self.db.query(Activity).filter(Activity.isvalid == True,Activity.endtime>=now).order_by(Activity.starttime)[start_index:end_index]
+                data_valid = self.db.query(Activity).filter(Activity.isvalid == True,Activity.endtime>=now).order_by(Activity.starttime).all()
+                data_invalid = self.db.query(Activity).filter(Activity.isvalid == True,Activity.endtime<now).order_by(Activity.starttime.desc()).all()
+                data = (data_valid+data_invalid)[start_index:end_index]
             else:
                 data = self.db.query(Activity)\
                     .filter(and_(Activity.isvalid == True, Activity.ishot == True,Activity.endtime>=now))\
