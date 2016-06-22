@@ -87,5 +87,23 @@ class ActivCommitUser(Base):
     isvalid     = Column(Boolean(),default=True)  # 发布活动是否按照基本法
 
 
+class Biaobai(Base):
+
+	__tablename__ = "biaobai"
+
+	id = Column(Integer,nullable=False,primary_key=True)
+	user = Column(VARCHAR(64))
+	ip = Column(VARCHAR(32))
+	content = Column(VARCHAR(128))
+	posttime = Column(DateTime())
+
+class DenyIp(Base):
+	__tablename__ = "deny_ip"
+
+	id = Column(Integer,nullable=False,primary_key=True)
+	ip = Column(VARCHAR(32))
+	
+
+
 
 
