@@ -1,0 +1,352 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
+    <link href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet">
+    <style type="text/css">
+        html,body {
+            /*height: 100%;*/
+            margin: 0;
+        }
+        #test {
+            margin-top: 30px;
+            width: 100%;
+        }
+        #back {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: -1;
+        }
+        #biaobai_content {
+            /*max-height: 90%;*/
+            /*height: 100%;*/
+            border-bottom: 0;
+            color: black;
+            background: rgba(0,0,0,0);
+            top:30px;
+        }
+        #message {
+            word-wrap:break-word; 
+            word-break:normal;
+            width: 100%;
+        }
+        #message p {
+            margin-bottom: 0px;
+        }
+        #send_panel {
+            background-color: rgb(245,245,245);
+            width: 100%;
+            /*position: absolute;*/
+            /*height: 60px;*/
+            /*max-height: 20%;*/
+            /*bottom: 0;*/
+            margin-bottom: 0px;
+        }
+        #input_btn {
+            background-color: rgb(119,119,119);
+            color: white;
+        }
+        #set_btn {
+            background-color: rgb(119,119,119);
+            color: white;
+        }
+        .myinput {
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color:#555;
+            border:1px solid #ccc;
+            border-radius: 4px;
+        }
+        .row {
+            margin-left: 3px;
+        }
+        .btn {
+            margin-left: 5px;
+        }
+        .youyuan {
+            text-align: right;
+            width: 100%;
+        }
+        .message {
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: rgba(255,255,255,0.5);
+            min-width: 80px;
+            padding: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color:rgb(85,85,85);
+        }
+        .biaobai_message {
+            margin-bottom: 10px !important;
+            color: rgb(230,230,230);
+        }
+        #message {
+            padding-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+  </head>
+<body>
+<img id="back" src="http://ww1.sinaimg.cn/mw690/eadb4365gw1f3zsbapgv7j20go0tnq3y.jpg">
+  <div id="test">
+    
+    <div class="panel panel-default " id="biaobai_content">
+        <div class="panel-heading navbar-fixed-top">
+            <h5 class="panel-title"  style="text-align: center;">520表白日</h5>
+        </div>
+        <main>
+        <div class="panel-body" id="mywraper">
+            <div id="message">
+
+                
+            </div>
+        </div>
+        <main>
+    </div>
+    
+    <div class="panel panel-default navbar-fixed-bottom" id="send_panel">
+      <!-- <div class="panel-heading">
+        <h5 class="panel-title" style="text-align: center;">520表白日</h5>
+      </div> -->
+      <div class="panel-body ">
+          <div>
+            <label style="width: 100%;">
+                <span>昵称:</span>
+                <label id="nickname">未设置</label>
+                <span style="float: right;" id="online_number">25</span>
+                <label style="float: right";>在线人数:&nbsp;&nbsp;</label>
+            </label>
+            <label class="row" style="width: 100%;">
+                <input type="text" class="myinput col-xs-9" id="input_data" style="display: inline-block;" value="">
+                <button class="btn col-xs-2" id="input_btn">发送</button>  
+            </label>
+            <label class="row" style="width: 100%;" id="set_name">
+                <input type="text" class="myinput col-xs-9" id="username" style="display: inline-block;">
+                <button class="btn col-xs-2" id="set_btn">设置</button>  
+            </label>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script>
+
+  var storage = function() {
+    this.set=function(key,data) {
+        return window.localStorage.setItem(key,window.JSON.stringify(data));
+    };
+    this.get=function(key) {
+        return window.JSON.parse(window.localStorage.getItem(key));
+    };
+    this.remove=function(key) {
+        return window.localStorage.removeItem(key);
+    };
+  }
+
+    $(document).ready(function() {
+        //cp昵称
+        var name=[["安迪","包奕凡"],["曲筱绡","赵启平"],["邱莹莹","应勤"],["樊胜美","王柏川"],["陆小贝","姚澜"],["陆小山","袁帅"],["赵子龙","夏侯轻衣"],["柳时镇","姜暮烟"],["徐大荣","尹明珠"],["余淮","耿耿"],["方原","陆晴"],["梅长苏","霓凰郡主","靖王"],["吴邪","阿宁","张起灵"],["杨桃","果然"],["甄嬛","爱新觉罗 胤禛"],["芈月","芈姝","赢驷"],["明台","明楼","明楼"],["花千骨","白子画","墨冰"],["盖聂","端木蓉"],["荆天明","高月"],["张芃芃","齐晟"],["项羽","虞姬"],["张芃芃","齐晟","九王"],["景天","唐雪见"],["徐长卿","紫萱"],["佟湘玉","白展堂"],["郭芙蓉","吕秀才"],["李大嘴","杨惠兰"],["萧十一郎","沈璧君"],["何以琛","赵默笙","应晖","何以玫"],["杨过","小龙女"],["郭靖","黄蓉"],["戚百草","若白","方廷皓"],["无心","李月牙"],["都敏俊","千颂伊"],["封腾","薛杉杉"],["陈寻","方茴"],["林萧","周崇光","简溪"],["顾里","顾源"],["南湘","席城"],["唐宛如","卫海"],["明晓溪","牧流冰","风涧澈"],["风晴雪","百里屠苏"],["胡一菲","曾小贤","诺澜"],["米朵","萧亮",'雷奕明'],["高雯","沈东军"],["刘轩","姗姗"],["杰克","罗丝"],["陈美嘉","吕子乔"],["关谷神奇","唐悠悠"],["陆展博","林宛瑜"],["林真心","徐太宇","欧阳非凡"],["至尊宝","白晶晶","紫霞仙子"],["夏洛","马冬梅"],["沈佳宜","柯景腾"],["黄小仙","王小贱"],["王佳芝","易先生"],["贵树","明理"],["宁采臣","聂小倩"],["志明","春娇"],["尹天仇","柳飘飘"],["樱庭润子","星川高岭"],["叶湘伦","路小雨"],["杜拉拉","王伟"],["林一","周小栀"],["有马公生","宫园薰"],["金叹","车恩尚"],["郑微","林静","陈孝正"],["李珥","许弋","吧啦","张漾"],["程子欣","方启宏","张申然"],["孙纳","林见东"],["罗密欧","朱丽叶"],["入江直树","相原琴子"],["小燕子","永琪"],["紫薇","福尔康"],["兔子朱迪","狐狸尼克"],["唐伯虎","秋香"],["许仙","白娘子"],["贾宝玉","林黛玉","薛宝钗"],["赵灵儿","李逍遥"],["小鱼儿","花无缺"]];
+
+        var url = "{{url}}";
+        // var url = "115.28.27.150:6100";
+        var activity_day = {{day}};
+        var activity_start_hour = {{start_hour}};
+        var activity_end_hour = {{end_hour}};
+        var timeout = 1*1000;
+        var max_length = 500;
+        var count=1;
+        var ws;
+        var sto = new storage();
+        // sto.remove("biaobaiuser");
+        var lastTime = (new Date()).getTime();
+        var user = sto.get("biaobaiuser")||null;
+        var set_name = $("#set_name");
+        //初始化
+        function init(){
+            if(user==null||user.length<1){
+                set_name.show();
+                setDefaultName();
+            } else {
+                setNickname(user.user);
+                set_name.hide();
+            }
+            //set user
+            $("#set_btn").click(function(){
+                setuser();
+            });
+            //post
+            $("#input_btn").click(function(){
+                if (!window.WebSocket) { return; }  
+
+                if (ws.readyState == WebSocket.OPEN) {  
+                    var data = $("#input_data").val();
+                    if(data.length<1){
+                        alert("请输入表白内容哦");
+                    } else if(data.length>100){
+                        alert("表白内容过长");
+                    } else if(user==null||user.length<1){
+                        alert("请先设置昵称");
+                    } else if(check_message(data)){
+
+                    } else {
+                        if(check_time()){
+                            var send_content = {
+                                'user':user.user,
+                                'id':user.id,
+                                'content':$("#input_data").val()
+                            };
+                            ws.send(JSON.stringify(send_content));
+                            $("#input_data").val("");
+                            $('html, body').animate({scrollTop:0}, 'slow');
+                            $("#send_panel").blur();
+                            $("#biaobai_content").focus();
+                        } else {
+                            alert("表白太频繁或活动暂未开始");
+                        }
+                    }
+
+                } else {  
+                    // alert("The socket is not open.");  
+                }  
+            });
+
+            connect();
+        }
+        //设置昵称
+        function setuser(){
+            var username = $("#username").val();
+            if(username.length<1){
+                alert("昵称不能为空");
+            } else if(username.length>6){
+                alert("昵称太长");
+            } else if(check_message(username)){
+
+            } else {
+                user = {"user":username,"id":findNameId(username)};
+                setNickname(username);
+                sto.set("biaobaiuser",{"user":username,"id":findNameId(username)});
+                set_name.hide();
+            }
+        }
+        //检查时间
+        function check_time(){
+            var now = new Date();
+            if(now.getDate()!=activity_day||now.getHours()<activity_start_hour||now.getHours()>activity_end_hour){
+                return false;
+            }
+            if(now.getTime()-lastTime>timeout){
+                lastTime = now;
+                return true;
+            } else {
+                lastTime = now;
+                return false;
+            }
+        }
+        //连接websocket
+        function connect(){
+            if(!window.WebSocket){
+                window.WebSocket = window.MozWebSocket;
+                }
+                if(window.WebSocket){
+                    ws = new WebSocket("ws://"+url+"/herald/online/biaobai/post");
+                    ws.onopen = function(){
+                    }
+                    ws.onmessage = function(event) {
+                        var message = JSON.parse(event.data);
+                        if(message.type=="open"){
+                            for (var i = message.content.length-1; i >= 0; i--) {
+                                showMessage(message.content[i]);
+                      }
+                        } else {
+                            showMessage(message);
+                        }
+                    };
+
+                    ws.onclose = function(event) {
+                        console.log("closed");
+                        $("#message").append('</p></div>');
+                };
+            } else {
+                alert("当前浏览器不支持，请换用其他浏览器");
+            }
+        }
+
+        //展示信息
+        function showMessage(message){
+            count = count+1;
+            if(count>max_length){
+                $("#message").empty();
+            }
+            if(check_message(message.message)){
+                return;
+            }
+            if(message.type==="admin"){
+                $("#message").prepend("<p class='biaobai_message'>管理员 "+message.time.split(" ")[1]+" : <label class='message'>"+message.message+"<label></p>");
+            } else if(message.type==="info"){
+                setOnlineNumber(message.number);
+            } else {
+                    if(user&&findNameId(message.name)==user.id&&user.id!=-1){
+                        $("#message").prepend("<p class='youyuan biaobai_message'><label class='message'>"+message.message+"</label> : "+message.name + "</p>");
+                        // $("#message").prepend("<p class='youyuan'>"+message.name+" "+message.time.split(" ")[1]+" : "+message.message + "</p><br>");
+                    } else {
+                        $("#message").prepend("<p class='biaobai_message'>"+message.name+" "/*+message.time.split(" ")[1]*/+" : <label class='message'>"+message.message + "</label></p>");
+                    }
+            }
+        }
+        //获取随机数
+        function getRandom(number){
+            return parseInt(Math.random()*number);
+        }
+        //设置默认昵称
+        function setDefaultName(){
+            var first = getRandom(name.length);
+            var second = getRandom(name[first].length);
+            var username = $("#username");
+            username.val(name[first][second]);
+        }
+        //寻找昵称对应的id
+        function findNameId(target){
+            for (var i = 0; i < name.length; i++) {
+                for(var j=0;j<name[i].length;j++){
+                    if(name[i][j]===target){
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+        //设置在线人数
+        function setOnlineNumber(number){
+            $("#online_number").html(number);
+        }
+        //设置昵称
+        function setNickname(nickname){
+            $("#nickname").html(nickname);
+        }
+        function check_message(str){
+            var out = ['<','(',"alert","script",'&',];
+            if(str){
+                for (var i = 0; i < out.length; i++) {
+                    if(str.indexOf(out[i])!=-1){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        init();
+
+
+    });
+    
+  </script>
+</body>
+</html>

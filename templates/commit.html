@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
+    <link href="//cdn.bootcss.com/ionic/1.2.3/css/ionic.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <title>小猴偷米社团活动发布</title>
+    <style type="text/css">
+        .content {
+            margin: 10px;
+            margin-top: 70px;
+        }
+        .list {
+            
+        }
+        .my_input {
+            margin-top: 10px;
+        }
+        #up_img_WU_FILE_1 {
+            margin-top:5px;
+        }
+
+        input.textbox{
+            float:left;
+            padding:5px;
+            color:#999;
+            height:28px;
+            line-height:28px;
+            border:1px #ccc solid;
+            width:200px;
+            margin-right:4px;
+        }
+        a.link{
+            float:left;
+            display:inline-block;
+            position: relative;
+            padding:4px 16px;
+            color:#fff;
+            font:14px "Microsoft YaHei", Verdana, Geneva, sans-serif;
+            cursor:pointer;
+            background-color:#0099ff;
+            line-height:20px;
+            text-decoration:none;
+        }
+        input.uploadFile{
+            position:absolute;
+            right:0;
+            top:0;
+            opacity:0;
+            filter:alpha(opacity=0);
+            cursor:pointer;
+            width:60px;
+        }
+        .submit_button {
+            margin-left:5px;
+            background-color:#0099ff;
+            color:#fff;
+            border:0px;
+            padding:4px 16px;
+            line-height:20px;
+            font:14px "Microsoft YaHei", Verdana, Geneva, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="bar bar-header bar-positive">
+            <h1 class="title">社团</h1>
+        </div>
+        <div class="content">
+            <input class="form-control my_input" placeholder="活动名称" id="title">
+            <input class="form-control my_input" placeholder="活动地点" id="location">
+            <input class="form-control my_input" placeholder="活动时间" id="activity_time">
+            <input class="form-control my_input" placeholder="活动详情链接(可不填)" id="url">
+            <input class="datepicker form-control my_input" data-date-format="yyyy-mm-dd" placeholder="开始日期" id="start_time" readonly>
+            <input class="datepicker form-control my_input" data-date-format="yyyy-mm-dd" placeholder="结束日期" id="end_time" readonly>
+            <form  action="./upload" enctype="multipart/form-data" id="up_img_WU_FILE_1" method='post' onsubmit="return fileupload()">
+                <p>宣传海报上传:</p>
+                <div class="box">
+                    <input type="text" id="filename" class="textbox" />
+                    <a href="javascript:void(0);"  class="link">
+                        <input type="file" class="uploadFile" id="up_img_WU_FILE_0" filename name="file"
+                           onchange="getFile(this)" />浏览</a>
+                    <!-- <lable id="submit"><button class="submit_button">上传</button></lable> -->
+                </div>
+            </form>
+            <textarea class="form-control my_input" id="introduce" placeholder="活动简介(少于100字)"></textarea>
+            <div id="error_message">
+                
+            </div>
+            <button class="button button-block button-positive" id="post">
+            发布
+            </button>
+        </div>
+
+        <div class="bar bar-footer bar-positive">
+            <h1 class="title">小猴偷米工作室</h1>
+        </div>
+        
+        <!-- <p>11</p> -->
+    </div>
+    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        var error_message = $("#error_message");
+        var title=$("#title");
+        var start_time = $("#start_time");
+        var end_time = $("#end_time");
+        var url = $("#url");
+        var introduce = $("#introduce");
+        var activity_location = $("#location");
+        var activity_time = $("#activity_time");
+        var post_button = $("#post");
+        function getFile(event){
+            var filename = $(event).val();
+            $("#filename").val(filename);
+        }
+        var show_message = function(message){
+            error_message.html("<p>"+message+"</p>");
+            error_message.show();
+        }
+        function fileupload(){
+            if($("#up_img_WU_FILE_0").val()) {
+                $("#up_img_WU_FILE_1").ajaxSubmit(function(message) {
+                    data = JSON.parse(message);
+                    if(data.code==200){
+                        postdata(data.content);
+                    } else {
+                        show_message(data.content);
+                    }
+                });
+            } else {
+                postdata("");
+            }
+        }
+        function postdata(picurl){
+                if(title.val().length<1||start_time.val().length<1||end_time.val().length<1||introduce.val().length<1||introduce.val().length>100||activity_location.val().length<1||activity_time.val().length<1){
+                    show_message("数据不合法");
+                } else {
+                    jQuery.ajax({
+                      url: '',
+                      type: 'POST',
+                      dataType: 'json',
+                      data: {
+                        title: title.val(),
+                        location:activity_location.val(),
+                        start_time:start_time.val(),
+                        end_time:end_time.val(),
+                        introduce:introduce.val(),
+                        detail_url:url.val(),
+                        picurl:picurl,
+                        activity_time:activity_time.val()
+                      },
+                      success: function(data, textStatus, xhr) {
+                        if(data.code==200){
+                                show_message("发布成功");
+                            } else {
+                                show_message(data.content);
+                            }
+                      },
+                      error: function(xhr, textStatus, errorThrown) {
+                        show_message("网络连接错误");
+                      }
+                    });
+                    
+                }
+            }
+        $(document).ready(function() {
+            
+            
+            
+            
+            $('.datepicker').datepicker({
+            });
+
+            var footer_hide = function(){
+                $('.bar-footer').hide();
+            }
+            var footer_show = function(){
+                $('.bar-footer').show();
+            }
+            
+            function init(){
+                title.focus(function(event){
+                    footer_hide();
+                });
+                title.blur(function(event){
+                    footer_show();
+                });
+
+                activity_location.focus(function(event){
+                    footer_hide();
+                });
+                activity_location.blur(function(event){
+                    footer_show();
+                });
+
+                activity_time.focus(function(event){
+                    footer_hide();
+                });
+                activity_time.blur(function(event){
+                    footer_show();
+                });
+
+                url.focus(function(event){
+                    footer_hide();
+                });
+                url.blur(function(event){
+                    footer_show();
+                });
+
+                introduce.focus(function(event){
+                    footer_hide();
+                });
+                introduce.blur(function(event){
+                    footer_show();
+                });
+            }
+            
+            init();
+            post_button.click(function(event) {
+                show_message("");
+                fileupload();
+            });
+        });
+        
+
+    </script>
+</body>
+</html>
