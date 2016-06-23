@@ -52,7 +52,7 @@ class HuodongCommit(BaseHandler):
             is_hot      = self.get_argument('is_hot',default=False)
             picurl      = self.get_argument('picurl',default=None)
             detail_url  = self.get_argument('detail_url',None)
-            if not(start_time and end_time and title and introduce and location) or len(introduce)>150:
+            if not(start_time and end_time and title and introduce and location) or len(introduce)>100:
                 retjson['code'] = 300
                 retjson['content'] = codeTable[300]
             else:
@@ -65,9 +65,6 @@ class HuodongCommit(BaseHandler):
                 except:
                     raise HuoException(409)
 
-                #change the default picurl
-                if len(picurl)<1:
-                    picurl = "http://www.heraldstudio.com/herald/static/img/5672d312703fecce989d75f3e182291c.jpg"
                 # check if cookie exists
                 request_cookie = self.get_secure_cookie('ActivityCommitter')
                 if request_cookie:

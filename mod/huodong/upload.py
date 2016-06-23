@@ -36,13 +36,13 @@ class UploadPichandler(BaseHandler):
                         file_size = len(meta['body'])
                         if file_size>MAX_FILE_SIZE:
                             raise UploadException(401,u'文件过大')
-                        if houzhui not in ['jpg','png','jpeg']:
+                        if houzhui not in ['jpg','png']:
                             raise UploadException(401,u'文件格式不支持')
                         img = Image.open(io.BytesIO(meta['body']))
                         pic_size = img.size
                         if float(pic_size[0])/pic_size[1] != 2.5:
                             raise UploadException(401,u'图片比例不是5:2')
-                        # img = img.resize((500,200))
+                        img = img.resize((500,200))
                         shaobj = hashlib.md5()
                         shaobj.update(meta['body'])
                         filehash = shaobj.hexdigest()
