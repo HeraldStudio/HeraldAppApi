@@ -9,7 +9,7 @@ from models import Base
 
 # 每个类对应一个表
 class User(Base): # 用户表
-    __tablename__ = 'user'
+    __tablename__ = 'User'
 
     phone = Column(VARCHAR(11), nullable=False, primary_key=True)
     password = Column(VARCHAR(32), nullable=False) # 密码
@@ -20,36 +20,37 @@ class User(Base): # 用户表
 
 
 class Likes(Base): # 点赞表
-    __tablename__ = 'likes'
+    __tablename__ = 'Likes'
 
-    topicId = Column(Integer,primary_key=True)
-    userId = Column(Integer)
+    topicId = Column(Integer, ForeignKey('Topic.topicId',  onupdate='CASCADE'), primary_key=True)
+    user_phone = Column(VARCHAR(11), ForeignKey('User.phone',  onupdate='CASCADE'))
 
 class Topic(Base): # 话题表
-    __tablename__ = 'topic'
+    __tablename__ = 'Topic'
 
     topicId = Column(Integer, nullable=False, primary_key=True, unique=True)
     name = Column(VARCHAR(255))
     content = Column(VARCHAR(255))
-    commentNumber = Column(Integer)
-    likeNumber = Column(Integer)
-    startTime = Column(DateTime())
-    endTime = Column(DateTime())
+    sponsor = Column(VARCHAR(11), ForeignKey('User.phone',  onupdate='CASCADE'))
+    comment_number = Column(Integer)
+    like_number = Column(Integer, default=0)
+    start_time = Column(VARCHAR(15))
+    end_time = Column(VARCHAR(15))
 
 
 class Comment(Base):  # 评论表
-    __tablename__ = 'comments'
+    __tablename__ = 'Comments'
 
     commentId = Column(Integer, nullable=False, primary_key=True, unique=True)
-    topicId = Column(Integer)
-    userId = Column(Integer)
+    topicId = Column(Integer, ForeignKey('Topic.topicId', onupdate='CASCADE'))
+    user_phone = Column(VARCHAR(11), ForeignKey('User.phone', onupdate='CASCADE'))
     content = Column(VARCHAR(255))
-    time = Column(DateTime())
-    likeNumber = Column(Integer)
+    time = Column(VARCHAR(15))
+    like_number = Column(Integer, default=0)
 
 
 class CommentLike(Base):   # 评论点赞表
     __tablename__ = 'commentlike'
 
-    commentId = Column(Integer,primary_key=True)
-    userId = Column(Integer)
+    commentId = Column(Integer, ForeignKey('Comments.commentId', onupdate='CASCADE'), primary_key=True)
+    user_phone = Column(VARCHAR(11), ForeignKey('User.phone', onupdate='CASCADE'))

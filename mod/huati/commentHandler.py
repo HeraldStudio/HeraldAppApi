@@ -2,32 +2,39 @@
 import time
 import json
 
-from sqlalchemy.orm.exc import NoResultFound
-
 from BaseHandlerh import BaseHandler
 import Database.tables
 from Database.tables import Topic,Likes,Comment
-from Database.models import connection
+import commonFunctions
 
 
 class CommentActivity(BaseHandler):  #评论活动
+    current_time = time.time()
     def post(self):
-        tId = self.get_argument('topicId', default='unsolved')  # 话题名
-        uId = self.get_argument('userId',default='unsolved')
-        cont = self.get_argument('comment',default='unsolved')
-        # ISOTIMEFORMAT ='% Y - % m - % d % X'
-        # time = time.strftime(ISOTIMEFORMAT, time.localtime( time.time() ) )
-        comment = Comment(
-            topicId=tId,
-            userId=uId,
-            content=cont,
-            likeNumber=0)
-        self.db.merge(comment)
-        self.db.commit()
-        retdata = "success" # list array
-        retjson = {'code': '404', 'content': 'none'}
-        retjson['content'] = retdata
-        retjson['code'] = 200
+        retjson = {'code': '', 'content': ''}
+        m_topicId = self.get_argument('topicId', default='unsolved')  # 话题名
+        m_user_phone = self.get_argument('phone', default='unsolved')
+        m_content = self.get_argument('comment', default='unsolved')
+        try:
+             exist = self.db.query(Comment).filter(Comment.topicId == m_topicId,
+                                                   Comment.user_phone == m_user_phone,
+                                                   Comment.content == m_content).one()
+             if exist:
+                 retjson['code'] = 400
+                 retjson['content'] = '该评论已存在'
+        except:
+                comment = Comment(
+                topicId=m_topicId,
+                user_phone=m_user_phone,
+                content=m_content,
+                likeNumber=0,
+                time=self.current_time
+                )
+                self.db.merge(comment)
+                retjson['code'] = 200
+                retjson['content'] = "评论成功"  # list array
+                commonFunctions.commit(self, retjson)
+
         self.write(json.dumps(retjson, ensure_ascii=False, indent=2))
 
 

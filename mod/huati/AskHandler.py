@@ -3,7 +3,7 @@
 import json
 
 from sqlalchemy import desc
-
+import timestamp
 from BaseHandlerh import BaseHandler
 from Database.tables import Topic,Comment
 
@@ -18,45 +18,42 @@ class AskHandler(BaseHandler):  #  处理客户端一系列请求
                     response = dict(
                     topicId=item.topicId,    # item后的字串应与数据表中一致。
                     name=item.name,
-                    likeNumber=item.likeNumber,
-                    commentNumber=item.commentNumber,
+                    likeNumber=item.like_number,
+                    commentNumber=item.comment_number,
                     content=item.content,
-                     # startTime=item.startTime, // python 不支持datatime格式，需自己重新封装，见http://www.cnblogs.com/fengmk2/archive/2010/10/23/python-json-encode-datetime.html
-                     #   endTime=item.endTime
+                    startTime=item.start_time,
+                    endTime=item.end_time
                     )
                     retdata.append(response)
 
-        elif type == 'askTopicId':  # 测试后认为直接在askAllActivity后存储各个活动较为方面
-            name = self.get_argument('topicName', default='unsolved')
-            try:
-                entry = self.db.query(Topic).filter(Topic.name == name).one()
-                topicId = entry.topicId
-                retdata.append('topicId', topicId)
-            except:
-                retdata='no result found'
 
         elif type == 'askCommentId':   # 一次性获得某个话题的所有评论,按点赞数-+排序
             topicId = self.get_argument('topicId')
-            allComments = self.db.query(Comment).filter(Comment.topicId==topicId).order_by(desc(Comment.likeNumber))
-            for item in allComments:
-                response = dict(
-                    commentId=item.commentId,
-                    userId=item.userId,
-                    content=item.content,
-                    likeNumber=item.likeNumber,
-                    time=item.time
-                )
-                retdata.append(response)
+            try:
+                allComments = self.db.query(Comment).filter(Comment.topicId == topicId).order_by(
+                    desc(Comment.likeNumber))
+                for item in allComments:
+                    response = dict(
+                        commentId=item.commentId,
+                        phone=item.user_phone,
+                        content=item.content,
+                        likeNumber=item.likeNumber,
+                        time=timestamp.timestamp_datetime(item.time)
+                    )
+                    retdata.append(response)
+            except:
+                retdata='当前话题无评论'
+
 
         elif type == 'getMyComments':   # 获得自己所有的对话题的评论
-            usId = self.get_argument('userId')
-            allComments = self.db.query(Comment).filter(Comment.userId == usId).all()
+            user_phone = self.get_argument('userPhone')
+            allComments = self.db.query(Comment).filter(Comment.userId == user_phone).all()
             for item in allComments:
                 response = dict(
                     commentId=item.commentId,
                     topicId=item.topicId,
                     content=item.content,
-                    time=item.time,
+                    time=timestamp.timestamp_datetime(item.time),
                     likeNumber=item.likeNumber
                 )
                 retdata.append(response)
