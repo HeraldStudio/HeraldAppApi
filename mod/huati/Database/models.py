@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # DB_CONNECT_STRING = 'mysql+mysqldb://root:hxc@127.0.0.1/hearld_activity?charset=utf8'
 # DB_CONNECT_STRING = 'mysql+mysqldb://root:hxc@127.0.0.1:3306/hearld_activity?charset=utf8'
-DB_CONNECT_STRING = 'mysql+mysqldb://root:@127.0.0.1/hearld_activities?charset=utf8'
+DB_CONNECT_STRING = 'mysql+mysqldb://root:@127.0.0.1/herald_activity?charset=utf8'
 engine = create_engine(DB_CONNECT_STRING, echo=True)  # 返回数据库引擎，即连接数据库
 connection = engine.connect()
 

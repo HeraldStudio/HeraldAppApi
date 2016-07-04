@@ -9,6 +9,7 @@ from tornado.options import define, options
 from Database.models import engine
 from AskHandler import AskHandler
 from likeHandler import LikeActivity, LikeComment
+from TopicHandler import AddTopic
 from commentHandler import CommentActivity
 define("port", default=800, help="run on the given port", type=int)
 
@@ -19,7 +20,8 @@ class Application(tornado.web.Application):
             (r"/huodong/ask", AskHandler),
             (r"/huodong/likeActivity", LikeActivity),
             (r"/huodong/comment", CommentActivity),
-            (r"/huodong/likeComment", LikeComment)
+            (r"/huodong/likeComment", LikeComment),
+            (r"/huodong/addTopic", AddTopic)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,
