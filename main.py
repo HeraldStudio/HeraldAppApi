@@ -16,8 +16,6 @@ from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
 from mod.huodong.upload import UploadPichandler
 
-from mod.online_activity.biaobai import biaobaiHandler
-from mod.online_activity.static import biaobaiStaticHandler,InStaticHandler
 define("port", default=7000, help="run on the given port", type=int)
 
 class Application(tornado.web.Application):
@@ -30,9 +28,6 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),
             (r'/herald/api/v1/huodong/upload',UploadPichandler),
-            (r'/herald/online/biaobai/before',InStaticHandler),
-            (r'/herald/online/biaobai',biaobaiStaticHandler),
-            (r'/herald/online/biaobai/post',biaobaiHandler),
             (r'/herald/.*', PageNotFoundHandler)
             ]
         settings = dict(
@@ -40,7 +35,6 @@ class Application(tornado.web.Application):
             template_path=os.path.join(os.path.dirname(__file__), 'templates'),
             static_path=os.path.join(os.path.dirname(__file__), 'static'),
             debug=True,
-            xheaders=True
             # autoload=True,
             # autoescape=None
         )
