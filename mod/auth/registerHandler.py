@@ -69,10 +69,6 @@ class RegisterHandler(BaseHandler):
                     ret['code'] = 403
                     ret['content'] = u'该手机号已被注册或一卡通号已绑定'
                     self.db.rollback()
-            except HTTPError:
-                state = 0
-                ret['code'] = 400
-                ret['content'] = u'一卡通账号密码错误'
             except:
                 state = 0
                 self.db.rollback()
