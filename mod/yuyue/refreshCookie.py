@@ -53,7 +53,7 @@ def getCookie(cardnum,card_pwd):
         header = response.headers
         if 'Ssocookie' in header.keys():
             headertemp = json.loads(header['Ssocookie'])
-            cookie = headertemp[1]['cookieName']+"="+headertemp[1]['cookieValue']
+            cookie = headertemp[0]['cookieName']+"="+headertemp[0]['cookieValue']
             cookie += ";"+header['Set-Cookie'].split(";")[0]
             return True,cookie
         else:

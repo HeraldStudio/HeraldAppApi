@@ -51,7 +51,6 @@ class RegisterHandler(BaseHandler):
                 )
                 response = client.fetch(request)
                 header = response.headers
-                print header
                 if 'Ssocookie' in header.keys():
                     headertemp = json.loads(header['Ssocookie'])
                     cookie = headertemp[1]['cookieName']+"="+headertemp[1]['cookieValue']
