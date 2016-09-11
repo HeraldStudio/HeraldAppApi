@@ -11,10 +11,20 @@ from mod.auth.login import LoginHandler
 from mod.auth.registerHandler import RegisterHandler
 from mod.yuyue.yuyueHandler import YuyueHandler
 from mod.databases.db import engine
+
 from mod.huodong.getHuodong import getHuodong
 from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
 from mod.huodong.upload import UploadPichandler
+
+from mod.kuaidi.deleteRecord import DeleteRecordHandler
+from mod.kuaidi.getTimeList import GetTimeListHandler
+from mod.kuaidi.modifyState import ModifyStateHandler
+from mod.kuaidi.queryAll import QueryHandler
+from mod.kuaidi.queryByCardnum import QueryByCardnumHandler
+from mod.kuaidi.submit import SubmitHandler
+from mod.kuaidi.adminLogin import ExpressAdminLoginHandler
+
 
 define("port", default=7000, help="run on the given port", type=int)
 
@@ -28,6 +38,13 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),
             (r'/herald/api/v1/huodong/upload',UploadPichandler),
+            (r'/herald/api/v1/deliver/delete', DeleteRecordHandler),
+            (r'/herald/api/v1/deliver/timelist', GetTimeListHandler),
+            (r'/herald/api/v1/deliver/change', ModifyStateHandler),
+            (r'/herald/api/v1/deliver/submit', SubmitHandler),
+            (r'/herald/api/v1/deliver/admin_query', QueryHandler),
+            (r'/herald/api/v1/deliver/query', QueryByCardnumHandler),
+            (r'/herald/api/v1/deliver/admin_login', ExpressAdminLoginHandler),
             (r'/herald/.*', PageNotFoundHandler)
             ]
         settings = dict(
