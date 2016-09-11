@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 import tornado.web
 import tornado.gen
-from databases.tables import Access_Token,Users
+from databases.tables import Access_Token,Users,ExpressAdmin
 from sqlalchemy.orm.exc import NoResultFound
 import json
 
@@ -23,8 +23,22 @@ class BaseHandler(tornado.web.RequestHandler):
                 return False
         else:
             return False
+    def get_express_admin(self):
+        print self.request.headers.keys()
+        token = self.request.headers['Expressadmin'] if 'Expressadmin' in self.request.headers.keys() else None
+        print token
+        if token:
+            try:
+                token = self.db.query(ExpressAdmin).filter(ExpressAdmin.token==token).one()
+                return token
+            except:
+                return False
+        else:
+            return False
 
     def write_back(self,content):
         self.set_header('Access-Control-Allow-Origin','*')
+        self.set_header('Access-Control-Allow-Methods','GET,POST')
+        self.set_header('Access-Control-Allow-Headers','token')
         self.write(json.dumps(content,ensure_ascii=False, indent=2))
         self.finish()
