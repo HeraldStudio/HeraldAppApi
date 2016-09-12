@@ -9,7 +9,7 @@ from datetime import datetime
 
 from ..Basehandler import BaseHandler
 from sqlalchemy.orm.exc import NoResultFound
-from mod.databases.tables import Express
+from mod.databases.tables import Express,Users
 from ..return_code_config import generate_ret
 
 
@@ -33,18 +33,19 @@ class DeleteRecordHandler(BaseHandler):
             retjson = generate_ret("express",300)
         else:
             try:
-                exist_info = self.db.query(Express).filter(Express.phone == user.phone, \
+                _user = self.db.query(Users).filter(Users.phone==user.phone).one()
+                exist_info = self.db.query(Express).filter(Express.cardnum == _user.cardnum, \
                     Express.id == order_id).one()
-                if info.receiving:
+                if exist_info.receiving:
                     retjson = generate_ret("express",304)
                 else:
                     try:
-                        exist_info.delete()
+                        self.db.delete(exist_info)
                         self.db.commit()
                     except:
                         self.db.rollback()
             except NoResultFound:
                 retjson = generate_ret("express",410)
             except Exception,e:
-                retjson = generate_ret("express",500)
+                retjson = generate_ret("express",500, str(e))
         self.write_back(retjson)
