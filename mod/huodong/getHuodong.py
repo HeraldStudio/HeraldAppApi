@@ -12,6 +12,10 @@ from tornado.httputil import url_concat
 
 class getHuodong(BaseHandler):
 
+    def options(self):
+        retjson = {'code':200}
+        self.write_back(retjson)
+
     # there are 2 argument in request, type and page. for example :
     # .1 : .../huodong/get
     # .2 : .../huodong/get?page=0
