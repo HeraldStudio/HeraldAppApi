@@ -25,8 +25,6 @@ class QueryHandler(BaseHandler):
 
     def options(self):
         retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET,POST')
-        self.set_header('Access-Control-Allow-Headers','token')
         self.write_back(retjson)
 
     def post(self):

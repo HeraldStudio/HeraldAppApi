@@ -38,12 +38,12 @@ class ModifyStateHandler(BaseHandler):
             retjson = generate_ret("express", 302)
         else:
             try:
-                exist_info = self.db.query(Express).filter(Express.id == order_id).one()
                 if key == "finish" or key == "receiving":
-                    state = {'true':True,'false':False}
+                    state = {'true':True,'false':False}[state]
                     data = { key: state}
+                    print order_id, data
+                    exist_info = self.db.query(Express).filter(Express.id == order_id).update(data)
                     try:
-                        exist_info.update(data)
                         modify = ExpressModify(
                             superuser=express_admin.name,
                             modify=json.dumps(data),
@@ -53,11 +53,11 @@ class ModifyStateHandler(BaseHandler):
                         self.db.commit()
                     except Exception,e:
                         self.db.rollback()
-                        retjson = generate_ret("express", 500)
+                        retjson = generate_ret("express", 500, str(e))
                 else:
                     retjson = generate_ret("express", 303)
             except NoResultFound:
                 retjson = generate_ret("express", 410)
             except Exception,e:
-                retjson = generate_ret("express", 500)
+                retjson = generate_ret("express", 500, str(e))
         self.write_back(retjson)

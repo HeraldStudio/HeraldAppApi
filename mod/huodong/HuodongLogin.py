@@ -11,8 +11,6 @@ class HuodongLogin(BaseHandler):
 
     def options(self):
         retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET')
-        self.set_header('Access-Control-Allow-Headers','token')
         self.write_back(retjson)
 
     def get(self):
