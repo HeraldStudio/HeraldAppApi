@@ -11,12 +11,6 @@ from ..databases.tables import ExpressAdmin
 from ..return_code_config import generate_ret
 
 class ExpressAdminLoginHandler(BaseHandler):
-    def get(self):
-        ret = {'code':200,'content':'ok'}
-        self.set_header('Access-Control-Allow-Methods','GET,POST')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write(json.dumps(ret,ensure_ascii=False, indent=2))
-
     def post(self):
         retjson = generate_ret('express',200)
         admin_name = self.get_argument('admin_name',None)

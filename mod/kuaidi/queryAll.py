@@ -22,11 +22,6 @@ class QueryHandler(BaseHandler):
     管理员查询所有订单
     查询信息, 十小时之内的资料将会被返回,
     """
-
-    def options(self):
-        retjson = {'code':200}
-        self.write_back(retjson)
-
     def post(self):
         retjson = generate_ret("express", 200)
         page = int(self.get_argument('page',default=1))

@@ -13,10 +13,6 @@ from ..return_code_config import generate_ret
 
 
 class QueryByCardnumHandler(BaseHandler):
-    def options(self):
-        retjson = {'code':200}
-        self.write_back(retjson)
-
     """
     通过一卡通号码查询之前的订单
     """
