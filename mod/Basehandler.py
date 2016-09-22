@@ -7,6 +7,10 @@ from sqlalchemy.orm.exc import NoResultFound
 import json
 
 class BaseHandler(tornado.web.RequestHandler):
+    def options(self):
+        retjson = {'code':200}
+        self.write_back(retjson)
+        
     @property
     def db(self):
         return self.application.db

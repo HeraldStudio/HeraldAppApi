@@ -19,11 +19,6 @@ class SubmitHandler(BaseHandler):
     提交的去快递请求在此处理, 提交成功后将会返回unix时间戳
     目前每天最大下五单
     """
-    def options(self):
-        retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET,POST')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write_back(retjson)
     def post(self):
         OneDayMaxCount = 5
         retjson = generate_ret('express',200)

@@ -18,11 +18,6 @@ class DeleteRecordHandler(BaseHandler):
     删除某条订单记录, 需要订单id
     请牢记, 已经接单的不可以删除
     """
-    def options(self):
-        retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET,POST')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write_back(retjson)
     def post(self):
         retjson = generate_ret('express',200)
         user = self.get_current_user()

@@ -12,12 +12,6 @@ class GetTimeListHandler(BaseHandler):
     """
      返回当前可用的时间列表
     """
-    def options(self):
-        retjson = {'code':200}
-        self.set_header('Access-Control-Allow-Methods','GET,POST')
-        self.set_header('Access-Control-Allow-Headers','token')
-        self.write_back(retjson)
-        
     def post(self):
         retjson = {'code':200, 'content':''}
 

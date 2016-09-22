@@ -8,11 +8,6 @@ from ..databases.tables import ActivCommitUser
 from ..return_code_config import codeTable
 
 class HuodongLogin(BaseHandler):
-
-    def options(self):
-        retjson = {'code':200}
-        self.write_back(retjson)
-
     def get(self):
         self.render('HuoLogin.html')
 
