@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+"""
+ Create On: September 29, 2016
+    Author: corvo
+"""
+
+COOKIE_SECRET     = "MAX90KLP8371B5AEAC5E64C6042415EF"
+
+# 空教室请求
+EMPTYROOM_API_URL = "http://115.28.27.150/api/emptyroom"    
+
+UUID              = "0000000000000000000000000000000000000000"
+
+
+

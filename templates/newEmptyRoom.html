@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+        <title>空闲教室查询</title>
+    </head>
+    <body>
+<style type="text/css">
+#menu li {
+float:left;
+}
+</style>
+    <div data-role="page" id="query_page">
+        <div role="main" class="ui-content">
+            <center>
+            <div data-role="fieldcontain">
+                <form>
+                    <fieldset data-role="controlgroup" data-type ="horizontal" data-mini="true">
+                        <input type="radio" name="pattern" id="one"  checked="checked">
+                        <label for="one">快捷查询</label>
+                        <input type="radio" name="pattern" id="two"  >
+                        <label for="two">指定查询</label>
+                    </fieldset>
+                </form>
+                <ul id="empty" data-role="listview"  data-inset="true" >
+                    <!-- 公共部分 -->
+                    <li>
+                        <fieldset data-role="fieldcontain" data-type ="horizontal" >
+                            <!-- 校区 -->
+                            <div class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label class="place" for="campus" font>校区</label>
+                                </div>
+                                <div class="ui-block-b">
+                                    <select name="type" id="campus" >
+                                        <option value="22" selected="selected">
+                                            九龙湖
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 教学楼 -->
+                            <div class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label class="place" for="building" font>教学楼</label>
+                                </div>
+                                <div class="ui-block-b">
+                                    <select id="building" >
+                                        <option value="" selected="selected">
+                                                教一~八
+                                        </option>
+                                        <option value="9">
+                                            教一
+                                        </option>
+                                        <option value="10">
+                                            教二
+                                        </option>
+                                        <option value="11">
+                                            教三
+                                        </option>
+                                        <option value="12">
+                                            教四
+                                        </option>
+                                        <option value="13">
+                                            教五
+                                        </option>
+                                        <option value="14">
+                                            教六
+                                        </option>
+                                        <option value="15">
+                                            教七
+                                        </option>
+                                        <option value="45">
+                                            教八
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--  节次-->
+                            <!-- 开始节次 -->
+                            <div class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label class="place" for="start_lesson" font>开始节次</label>
+                                </div>
+                                <div class="ui-block-b" >
+                                    <select id="start_lesson" >
+                                        {%for i in range(1,14)%}
+                                            <option value={{i}} {%if (i==1)%} selected="selected" {%end%}>{{i}}</option>
+                                       {%end%}
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!-- 结束节次 -->
+                            <div class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label class="place" for="end_lesson" font>结束节次</label>
+                                </div>
+                                <div class="ui-block-b">
+                                    <select id="end_lesson" >
+                                        {%for i in range(1,14)%}
+                                            <option value={{i}} {%if (i==1)%} selected="selected" {%end%}>{{i}}</option>
+                                       {%end%}
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    <!-- </li> -->
+                    <!-- 快捷查询 -->
+                    <div id="simple">
+                         <div class="pattern one">
+                            <!-- <fieldset data-role="fieldcontain" data-type ="horizontal" > -->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <button  value="{{today}}" class="ui-btn-inline ui-btn ui-corner-all quick_query" />查询今天</button>
+                                    </div>
+                                    <div class="ui-block-b">
+                                        <button  value="{{tomorrow}}" class="ui-btn-inline ui-btn ui-corner-all quick_query" />查询明天</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                         </div>
+                    </div>
+                    <!-- 制定查询 -->
+                    <div id="complex">
+                        <div class="ui-screen-hidden pattern two">
+                            <fieldset data-role="fieldcontain" data-type ="horizontal" >
+                                <!-- 学期 -->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <label class="place" for="term" font>学期</label>
+                                    </div>
+                                    <div class="ui-block-b">
+                                        <select id="term" >
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- 周次 -->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <label class="place" for="week" font>周次</label>
+                                    </div>
+                                    <div class="ui-block-b">
+                                        <select id="week" >
+                                            {%for i in range(1,19)%}
+                                            <option value={{i}} {%if (i==1)%} selected="selected" {%end%}>{{i}}</option>
+                                       {%end%}
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- 星期 -->
+                                <div class="ui-grid-a">
+                                    <div class="ui-block-a">
+                                        <label class="place" for="dayOfWeek" font>星期</label>
+                                    </div>
+                                    <div class="ui-block-b">
+                                        <select id="dayOfWeek" >
+                                            {%for i in range(1,8)%}
+                                                <option value={{i}} {%if (i==1)%} selected="selected" {%end%}>{{i}}</option>
+                                       {%end%}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button  class="ui-btn-inline ui-btn ui-corner-all" id="complex_query" />点击查询</button>
+                            </fieldset>
+                        </div>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+            </center>
+            <div data-role="footer" data-position="fixed" >
+              <h1>小猴偷米•先声网</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- 结果显示 -->
+    <div data-role="page" id="result_page">
+        <div data-role="header">
+            <a href="#query_page"  class="ui-btn ui-corner-all ui-icon-carat-l ui-btn-icon-notext">返回</a>
+            <h1>查询结果</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <div>
+            <ul data-role="listview"   id="result_content">
+            </ul>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed" >
+            <h1>小猴偷米</h1>
+        </div>
+        
+        
+    </div>
+
+    <script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+    <script type="text/javascript">
+
+        var termId = 10;//学期号
+        var termInfo = {
+
+        }
+        var queryData = {
+
+        }
+        $(document).ready(function() {
+            function init() {
+                $("[type=radio]").on('click', function() {
+                    console.log(this.id);
+                    $('.pattern').addClass("ui-screen-hidden");
+                    $('.' + this.id).removeClass("ui-screen-hidden");
+                });
+
+                $(".quick_query").click(function(event) {
+                    $.mobile.loading('show', {theme:"b", text:"正在查询...", textonly:true, textVisible: true});
+                    var day = this.value;
+                    var campus = $("#campus").val();
+                    var building = $("#building").val();
+                    var start = $("#start_lesson").val();
+                    var end_lesson = $("#end_lesson").val();
+                    quick_query(day,campus,building,start,end_lesson);
+                });
+
+                $("#complex_query").click(function(event){
+                    $.mobile.loading('show', {theme:"b", text:"正在查询...", textonly:true, textVisible: true});
+                    var campus = $("#campus").val();
+                    var building = $("#building").val();
+                    var start = $("#start_lesson").val();
+                    var end_lesson = $("#end_lesson").val();
+                    var term = $("#term").val();
+                    var week = $("#week").val();
+                    var dayOfWeek = $("#dayOfWeek").val();
+                    saveData(1,45,campus,building,week,week,dayOfWeek,start,end_lesson,term);
+                    getList(1,45,campus,building,week,week,dayOfWeek,start,end_lesson,term);
+                });
+
+                getTerm();
+            }
+            init();
+
+            function changeWeek(termId){
+                var start = termInfo[termId]['start'];
+                var end = termInfo[termId]['end'];
+                var htmlContent = "";
+                for(var i=start;i<=end;i++){
+                    htmlContent += "<option value="+i+">"+i+"</options>";
+                }
+                $("#week").html(htmlContent);
+            }
+            function getTerm(){
+                jQuery.ajax({
+                  url: '/herald/api/v1/queryEmptyClassrooms/m',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {
+                    'url':'http://58.192.114.179/classroom/common/gettermlistex',
+                    'method':"GET"
+                  },
+                  success: function(data, textStatus, xhr) {
+                    if(data['code'] == 200){
+                        var content = data['content'];
+                        var contentHtml = "";
+                        for(var i=0;i<content.length;i++) {
+                                termInfo[content[i]['id']] = {};
+                                termInfo[content[i]['id']]['start'] = content[i]['startWeek'];
+                                termInfo[content[i]['id']]['end'] = content[i]['endWeek'];
+                                contentHtml += "<option value="+content[i]['id']+">"+content[i]['name']+"</options>";
+                        }
+                        $("#term").html(contentHtml);
+                        $("#term").change(function(){
+                            changeWeek($(this).val());
+                        });
+                    } else {
+                        $.mobile.loading('show', {theme:"b", text:"后台接口错误", textonly:true, textVisible: true});
+                         setTimeout(function(){
+                            $.mobile.loading('hide');
+                         },2000)
+                    }
+                  },
+                  error: function(xhr, textStatus, errorThrown) {
+                     $.mobile.loading('hide');
+                     $.mobile.loading('show', {theme:"b", text:"网络错误", textonly:true, textVisible: true});
+                     setTimeout(function(){
+                        $.mobile.loading('hide');
+                     },2000)
+                  }
+                });
+                
+            }
+
+            function quick_query(day,campus,building,start,end){
+               jQuery.ajax({
+                 url: "/herald/api/v1/queryEmptyClassrooms/m",
+                 type: 'POST',
+                 dataType: 'json',
+                 data:{
+                    'url':"http://58.192.114.179/classroom/common/getdateofweek?date="+day,
+                    'method':"GET"
+                 },
+                 success: function(data) {
+                    if(data['code']==200){
+                        var content = data['content'];
+                        saveData(1,45,campus,building,content['week'],content['week'],content['dayOfWeek'],start,end,termId);
+                        getList(1,45,campus,building,content['week'],content['week'],content['dayOfWeek'],start,end,termId);
+                    } else {
+                        $.mobile.loading('hide');
+                        $.mobile.loading('show', {theme:"b", text:"后台接口错误", textonly:true, textVisible: true});
+                         setTimeout(function(){
+                            $.mobile.loading('hide');
+                         },2000)
+                    }
+                 },
+                 error: function(xhr, textStatus, errorThrown) {
+                    $.mobile.loading('hide');
+                     $.mobile.loading('show', {theme:"b", text:"网络错误", textonly:true, textVisible: true});
+                     setTimeout(function(){
+                        $.mobile.loading('hide');
+                     },2000)
+                 }
+               });
+               
+            }
+            function saveData(page,pageSize,campusId,buildingId,startWeek,endWeek,dayOfWeek,startSequence,endSequence,termId){
+                queryData.page = page;
+                queryData.pageSize = pageSize;
+                queryData.campusId = campusId;
+                queryData.buildingId = buildingId;
+                queryData.startWeek = startWeek;
+                queryData.endWeek = endWeek;
+                queryData.dayOfWeek = dayOfWeek;
+                queryData.startSequence = startSequence;
+                queryData.endSequence = endSequence;
+                queryData.termId = termId;
+            }
+            function changePage(){
+                $("#pageNumber").change(function(event) {
+                   $.mobile.loading('show', {theme:"b", text:"正在查询...", textonly:true, textVisible: true});
+                   queryData.page = $(this).val();
+                   getList(queryData.page,queryData.pageSize,queryData.campusId,queryData.buildingId,queryData.startWeek,queryData.endWeek,queryData.dayOfWeek,queryData.startSequence,queryData.endSequence,queryData.termId);
+                });
+            }
+            function getList(pageNo,pageSize,campusId,buildingId,startWeek,endWeek,dayOfWeek,startSequence,endSequence,termId){
+                var data = {
+                    'pageNo':pageNo,
+                    'pageSize':pageSize,
+                    'campusId':campusId,
+                    'buildingId':buildingId,
+                    'startWeek':startWeek,
+                    'endWeek':endWeek,
+                    'dayOfWeek':dayOfWeek,
+                    'startSequence':startSequence,
+                    'endSequence':endSequence,
+                    'termId':termId
+                }
+                jQuery.ajax({
+                  url: '/herald/api/v1/queryEmptyClassrooms/m',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {
+                    'url':"http://58.192.114.179/classroom/show/getemptyclassroomlist",
+                    'method':"POST",
+                    'data':JSON.stringify(data)
+                  },
+                  success: function(data, textStatus, xhr) {
+                    if(data['code']==200){
+                        $.mobile.loading('hide');
+                        content = data['content'];
+                        console.log(content);
+                        alldata = content['pager.totalRows'];
+                        
+                        var htmlContent = "";
+                        for (var i = 0; i <content['rows'].length; i++) {
+                            htmlContent += "<li class='ui-li-static ui-body-inherit ui-first-child'>"+content['rows'][i]['code'];
+                            for (var j = 0;j<content['rows'][i]['classroomTypeList'].length ;j++) {
+                                htmlContent += "&nbsp;&nbsp;"+content['rows'][i]['classroomTypeList'][j]['name'];
+                            };
+                           htmlContent+="</li>";
+                           };
+                        var show = (queryData.page-1)*pageSize;
+                        var allPage = alldata/pageSize+1;
+                        console.log(allPage)
+                        if(alldata-show>pageSize){
+                            show = (queryData.page)*pageSize;
+                        } else {
+                            show = alldata;
+                        }
+                        htmlContent += "<li><span>共查询到"+alldata+"条记录,显示"+show+"条记录"+"<select data-role='none' id='pageNumber'>";
+
+                        for(var i=1;i<=allPage; i++){
+                            if(i==pageNo){
+                                htmlContent+= "<option value="+i+" selected='selected'>第"+i+"页</option>";
+                            } else {
+                                htmlContent+= "<option value="+i+">第"+i+"页</option>";
+                            }
+                        }
+                        htmlContent += "</select></span></li>";
+                        $("#result_content").html("");
+                        $("#result_content").html(htmlContent);
+                        window.location="#result_page";
+                        changePage();
+                    } else {
+                        $.mobile.loading('hide');
+                        $.mobile.loading('show', {theme:"b", text:"后台接口错误", textonly:true, textVisible: true});
+                         setTimeout(function(){
+                            $.mobile.loading('hide');
+                         },2000)
+                    }
+                  },
+                  error: function(xhr, textStatus, errorThrown) {
+                    //called when there is an error
+                     $.mobile.loading('hide');
+                     $.mobile.loading('show', {theme:"b", text:"网络错误", textonly:true, textVisible: true});
+                     setTimeout(function(){
+                        $.mobile.loading('hide');
+                    },2000);
+                  }
+                });
+                
+            }
+
+            
+
+           
+        });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
+    <link href="//cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/jquery-mobile/1.4.0/jquery.mobile.min.css" rel="stylesheet">
+    <style type="text/css">
+    .active {
+      color:#0066FF;
+      border-top-color: #0066FF;
+      border-top-width: 2px;
+      border-top-style: solid;
+    }
+    </style>
+    <title>反馈详情</title>
+  </head>
+  <body style="background-color: #EEEEEE">
+    <div class="bar bar-header bar-positive row" style="position: relative;">
+      <div class="col" style="text-align: center">
+        <p style="color:white;font-family:微软雅黑">反馈详情</p>
+      </div>
+    </div>
+    <div id="all">
+        {% if len(data) < 1%}
+            <div id="card"  style="margin: 10px;">
+                    <div class="item item-text-wrap" style="border-radius: 10px">
+                        <p>暂未有回复留言</p>
+                    </div>
+            </div>
+        {% end %}
+        {% for item in data %}
+            {% if item.response %}
+                <div id="card"  style="margin: 10px;">
+                    <div class="item item-text-wrap" style="border-radius: 10px">
+                        <p id="time" style="color:#BBBBBB;font-size: 10px">{{item.date}}</p>
+                        <p id="question" style="font-size: 15px">
+                        <i class="ion-ios-paperplane-outline"></i>：{{item.text}}</p>
+                        <p id="response"><p id="response"><i class="ion-ios-person"></i>：{{item.response}}</p>
+                    </div>
+                </div>
+            {% end %}
+        {% end %}
+    </div>
+    <div id="my">
+        {% if len(mydata) < 1%}
+            <div id="card"  style="margin: 10px;">
+                    <div class="item item-text-wrap" style="border-radius: 10px">
+                        <p>暂未留言</p>
+                    </div>
+            </div>
+        {% end %}
+        {% for item in mydata %}
+            <div id="card"  style="margin: 10px;">
+                <div class="item item-text-wrap" style="border-radius: 10px">
+                    <p id="time" style="color:#BBBBBB;font-size: 10px">{{item.date}}</p>
+                    <p id="question" style="font-size: 15px">
+                        <i class="ion-ios-paperplane-outline"></i>：{{item.text}}
+                    </p>
+                    {% if item.response %}
+                        <p id="response">
+                            <i class="ion-ios-person"></i>：{{item.response}}
+                        </p>
+                    {% else %}
+                        <p id="response"><i class="ion-ios-person"></i>：暂未回复请稍等</p>
+                    {% end %}
+                </div>
+            </div>
+        {% end %}
+    </div>
+    <div class="tabs" style="position:fixed;bottom: 0">
+      <a id="all_details" class="tab-item" style="">
+        全部反馈
+      </a>
+      <a id="my_details" class="tab-item">
+        我的反馈
+      </a>
+    </div>
+    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $("#my").hide();
+            $("#all").show();
+            $("#all_details").addClass('active');
+            $("#all_details").click(function(event){
+                $("#my_details").removeClass('active');
+                $("#all_details").addClass('active');
+                $("#my").hide();
+                $("#all").show();
+            });
+            $("#my_details").click(function(event){
+                $("#all_details").removeClass('active');
+                $("#my_details").addClass('active');
+                $("#my").show();
+                $("#all").hide();
+            });
+        });
+    </script>
+  </body>
+</html>

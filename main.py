@@ -24,7 +24,13 @@ from mod.kuaidi.queryAll import QueryHandler
 from mod.kuaidi.queryByCardnum import QueryByCardnumHandler
 from mod.kuaidi.submit import SubmitHandler
 from mod.kuaidi.adminLogin import ExpressAdminLoginHandler
+from mod.emptyroom.handler import NewGetHandler
+from mod.emptyroom.oldHandler import GetHandler,SimpleHander,ComplexHander
+from mod.service.feedbackHandler import FeedBackHandler,FeedBackSuccessHandler,FeedBackDetailsHandler
 
+
+
+from config import COOKIE_SECRET
 
 define("port", default=7000, help="run on the given port", type=int)
 
@@ -45,12 +51,21 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/deliver/admin_query', QueryHandler),
             (r'/herald/api/v1/deliver/query', QueryByCardnumHandler),
             (r'/herald/api/v1/deliver/admin_login', ExpressAdminLoginHandler),
+            (r'/herald/api/v1/deliver/admin_login', ExpressAdminLoginHandler),
+            (r"/herald/api/v1/queryEmptyClassrooms/m", NewGetHandler),
+            (r"/herald/api/v1/queryEmptyClassrooms/m/(.*)", NewGetHandler),
+            (r"/herald/api/v1/queryEmptyClassrooms/simple", SimpleHander),
+            (r"/herald/api/v1/queryEmptyClassrooms/complex", ComplexHander),
+            (r"/herald/api/v1/feedback",FeedBackHandler),
+            (r"/herald/api/v1/feedback/success",FeedBackSuccessHandler),
+            (r"/herald/api/v1/feedback/details",FeedBackDetailsHandler),
             (r'/herald/.*', PageNotFoundHandler)
+
             ]
         settings = dict(
-            cookie_secret="8DB90KLP8371B5AEAC5E64C6042415EF",
-            template_path=os.path.join(os.path.dirname(__file__), 'templates'),
-            static_path=os.path.join(os.path.dirname(__file__), 'static'),
+            cookie_secret=COOKIE_SECRET,
+            template_path= os.path.join(os.path.dirname(__file__), 'templates'),
+            static_path= os.path.join(os.path.dirname(__file__), 'static'),
             debug=True,
             # autoload=True,
             # autoescape=None

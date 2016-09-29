@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
+        <link href="//cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
+        <title>反馈</title>
+    </head>
+
+    <style type="text/css">
+		.feedback_content {
+			height:100px !important;
+		}
+		.list p {
+			padding-left: 10px;
+		}
+    </style>
+ 
+    <body>
+		
+		<div class="bar bar-header bar-positive">
+		  <h1 class="title">反馈</h1>
+		</div>
+		<div class="content has-header">
+			
+			<div class="list">
+				<p>我们希望您喊出您的心声</p>
+				<p>可以是对小猴的吐槽,可以是对小猴功能的idea</p>
+				<p>可以是对小猴出现问题的反馈,可以是对小猴的感谢</p>
+				<p>总之一切和小猴有关的，大声告诉我们吧~</p>
+				<p>衷心感谢大家一直以来的支持与包容</p>
+				<p>愿小猴陪你度过美好的大学时光</p>
+				<label class="item item-input">
+				    <textarea placeholder="反馈内容" class="feedback_content"></textarea>
+				</label>
+				
+			</div>
+			<div class="ionic padding">
+				<p id="tips"></p>
+				<button class="button button-block button-positive" id="tell_xiaohou">告诉小猴</button>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+		<div class="bar bar-footer bar-stable">
+		  <h1 class="title">小猴偷米</h1>
+		</div>
+	<script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+
+		$(".feedback_content").focus(function(event) {
+			$('.bar-footer').hide();
+		});
+		$(".feedback_content").blur(function(event) {
+			$('.bar-footer').show();
+		});
+		$("#tell_xiaohou").click(function(event) {
+			var content = $(".feedback_content").val();
+			if(content.length==0){
+				$("#tips").html("反馈内容不能为空");
+				setInterval(function(){
+					$("#tips").hide();
+				},2000);
+			} else {
+			$.ajax({
+				url: '/herald/api/v1/feedback',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					'content':content
+				},
+			})
+			.done(function(data) {
+				$("#tips").html(data['content']);
+				window.location.href="./feedback/success";
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			}
+
+		});
+	});
+	</script>
+    </body>
+</html>

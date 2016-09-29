@@ -4,6 +4,9 @@
 ### 数据库相关
 mod/databases/db.py
 
+### 配置文件相关
+config.py
+
 #### eclipse ####
 
 
