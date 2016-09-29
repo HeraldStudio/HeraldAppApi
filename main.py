@@ -28,8 +28,6 @@ from mod.emptyroom.handler import NewGetHandler
 from mod.emptyroom.oldHandler import GetHandler,SimpleHander,ComplexHander
 from mod.service.feedbackHandler import FeedBackHandler,FeedBackSuccessHandler,FeedBackDetailsHandler
 
-
-
 from config import COOKIE_SECRET
 
 define("port", default=7000, help="run on the given port", type=int)
