@@ -6,7 +6,7 @@ import tornado.web
 import datetime
 import json, urllib
 from tornado.httpclient import HTTPRequest, HTTPClient
-from config import UUID, EMPTYROOM_API_URL 
+from config import UUID, EMPTYROOM_API_URL
 
 class NewGetHandler(tornado.web.RequestHandler):
     def get(self, page=""):

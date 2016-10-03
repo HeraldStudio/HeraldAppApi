@@ -10,7 +10,7 @@ from BaseHandlerh import BaseHandler
 import Database.tables
 from Database.tables import Topic, Likes,Comment,CommentLike
 from Database.models import connection
-import commonFunctions
+import TopicFuncs
 
 
 class LikeActivity(BaseHandler):  # 给话题点赞
@@ -37,7 +37,7 @@ class LikeActivity(BaseHandler):  # 给话题点赞
             self.db.merge(like)  # 在话题-用户表中加入改项
             retjson['code'] = 200
             retjson['content'] = "点赞成功"
-            commonFunctions.commit(self, retjson)
+            TopicFuncs.commit(self, retjson)
 
 
         self.write(json.dumps(retjson, ensure_ascii=False, indent=2))

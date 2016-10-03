@@ -125,5 +125,49 @@ class ExpressAdmin(Base):
     token = Column(VARCHAR(64))
 
 
+# 话题模块
+class Topic(Base):  # 话题表
+    __tablename__ = 'Topic'
+
+    id = Column(Integer, nullable=False, primary_key=True, unique=True)
+    name = Column(VARCHAR(64), nullable=False)  # 话题名
+    content = Column(VARCHAR(256), nullable=False)  # 话题内容
+    commentN = Column(Integer, nullable=False, default=0)  # 评论数
+    readN = Column(Integer, default=0, nullable=False)  # 浏览人数
+    startT = Column(DateTime())  # 开始时间
+    valid = Column(Boolean, default=True, nullable=False)
+
+
+class Tcomment(Base):  # 评论表
+    __tablename__ = 'Tcomment'
+
+    id = Column(Integer, nullable=False, primary_key=True, unique=True)
+    topicid = Column(Integer, ForeignKey('Topic.id', onupdate='CASCADE'), nullable=False)  # 话题id
+    cardnum = Column(VARCHAR(9), ForeignKey('Users.cardnum', onupdate='CASCADE'))  # 评论人一卡通号
+    content = Column(VARCHAR(255), nullable=False)
+    commentT = Column(DateTime())  # 评论时间
+    likeN = Column(Integer, default=0)  # 点赞数
+    quote = Column(Integer, ForeignKey('Tcomment.id', onupdate='CASCADE'))   # 评论引用，为评论Id，作为一级评论的回复
+    anonymous = Column(Boolean, default=False, nullable=False)  # 判断是否匿名
+    valid = Column(Boolean, default=True, nullable=False)
+
+
+class Tpraise(Base):  # 话题点赞表
+    __tablename__ = 'Tpraise'
+    id = Column(Integer, nullable=False, primary_key=True)
+    cardnum = Column(VARCHAR(9), ForeignKey('Users.cardnum', onupdate='CASCADE'))  # 评论人一卡通号
+    commentid = Column(Integer, ForeignKey('Tcomment.id', onupdate='CASCADE'), nullable=False)
+    valid = Column(Boolean, default=True, nullable=False)
+
+class TopicAdmin(Base):
+    """
+    快递模块管理员
+    """
+    __tablename__ = "topic_admin"
+    id = Column(Integer,nullable = False, primary_key = True)
+    name = Column(VARCHAR(32), nullable = False)
+    password = Column(VARCHAR(32), nullable = False)
+    token = Column(VARCHAR(64))
+
 
 

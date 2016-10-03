@@ -9,6 +9,7 @@ from tornado.options import define, options
 from sqlalchemy.orm import scoped_session, sessionmaker
 from mod.auth.login import LoginHandler
 from mod.auth.registerHandler import RegisterHandler
+from mod.huati.TopicHandler import TopicHandler
 from mod.yuyue.yuyueHandler import YuyueHandler
 from mod.databases.db import engine
 
@@ -55,9 +56,11 @@ class Application(tornado.web.Application):
             (r"/herald/api/v1/queryEmptyClassrooms/simple", SimpleHander),
             (r"/herald/api/v1/queryEmptyClassrooms/complex", ComplexHander),
             (r"/herald/api/v1/feedback",FeedBackHandler),
-            (r"/herald/api/v1/feedback/success",FeedBackSuccessHandler),
-            (r"/herald/api/v1/feedback/details",FeedBackDetailsHandler),
+            (r"/herald/api/v1/feedback/success", FeedBackSuccessHandler),
+            (r"/herald/api/v1/feedback/details", FeedBackDetailsHandler),
+            (r'/herald/api/v1/topic', TopicHandler),
             (r'/herald/.*', PageNotFoundHandler)
+
 
             ]
         settings = dict(
