@@ -147,7 +147,7 @@ class Tcomment(Base):  # 评论表
     content = Column(VARCHAR(255), nullable=False)
     commentT = Column(DateTime())  # 评论时间
     likeN = Column(Integer, default=0)  # 点赞数
-    quote = Column(Integer, ForeignKey('Tcomment.id', onupdate='CASCADE'))   # 评论引用，为评论Id，作为一级评论的回复
+    quote = Column(Integer, ForeignKey('Tcomment.id', onupdate='CASCADE'), default=1)   # 评论引用，为评论Id，作为一级评论的回复
     anonymous = Column(Boolean, default=False, nullable=False)  # 判断是否匿名
     valid = Column(Boolean, default=True, nullable=False)
 

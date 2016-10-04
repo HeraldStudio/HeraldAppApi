@@ -31,19 +31,21 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 评论话题
         elif ask_code == '103':
-            comment = self.get_argument('comment')
-            topic_id = self.get_argument('topicid')
-            topic_handler.comment(comment, cardnum, topic_id, retjson)
+            content = self.get_argument('content')
+            topic_id = self.get_argument('tid')
+            quo = self.get_argument('quo')  # 是否为评论引用，1为不是
+            ano = self.get_argument('ano')  # 是否匿名，1为匿名
+            topic_handler.comment(content, cardnum, topic_id, quo, ano, retjson)
 
         # 删除评论
         elif ask_code == '104':
-            id = self.get_argument('commentid')
-            topic_handler.delete_comment(id)
+            id = self.get_argument('cid')
+            topic_handler.delete_comment(id, cardnum, retjson)
 
         # 给评论点赞
         elif ask_code == '105':
             comment_id = self.get_argument('commentid')
-            topic_handler.parase(cardnum,comment_id)
+            topic_handler.parase(cardnum, comment_id)
 
         # 取消赞
         elif ask_code == '106':
