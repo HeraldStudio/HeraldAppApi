@@ -157,6 +157,7 @@ class Tpraise(Base):  # 话题点赞表
     id = Column(Integer, nullable=False, primary_key=True)
     cardnum = Column(VARCHAR(9), ForeignKey('Users.cardnum', onupdate='CASCADE'))  # 评论人一卡通号
     commentid = Column(Integer, ForeignKey('Tcomment.id', onupdate='CASCADE'), nullable=False)
+    paraseT = Column(DateTime())  # 评论时间
     valid = Column(Boolean, default=True, nullable=False)
 
 class TopicAdmin(Base):

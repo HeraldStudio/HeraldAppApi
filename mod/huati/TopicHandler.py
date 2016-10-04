@@ -11,6 +11,16 @@ from TopicFuncs import TopicFuncs
 
 
 class TopicHandler(BaseHandler):  #  处理客户端一系列请求
+
+    def judge_user(self, cardnum):
+        '''
+		todo检验该用户是否合法
+		:param cardnum: 一卡通号
+		:return: 1/0
+		'''
+
+        return 1
+
     def post(self):
         ask_code = self.get_argument('askcode', default='unsolved')
         cardnum = self.get_argument('cardnum')
@@ -44,13 +54,16 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 给评论点赞
         elif ask_code == '105':
-            comment_id = self.get_argument('commentid')
-            topic_handler.parase(cardnum, comment_id)
+            comment_id = self.get_argument('cid')
+            if self.judge_user(cardnum):
+                topic_handler.parase(cardnum, comment_id, retjson)
+            else:
+                retjson['content'] = '该用户不合法'
 
         # 取消赞
         elif ask_code == '106':
-            comment_id = self.get_argument('commentid')
-            topic_handler.cancel_parase(cardnum, comment_id)
+            comment_id = self.get_argument('cid')
+            topic_handler.cancel_parase(cardnum, comment_id, retjson)
 
         # 获得排名前x条评论
         elif ask_code == '107':
@@ -62,21 +75,21 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
-        if type == 'askAllTopic':  # 请求所有活动
-            data = self.db.query(Topic).all()  # 返回的是元组
-            for item in data:
-                    response = dict(
-                    topicId=item.topicId,    # item后的字串应与数据表中一致。
-                    name=item.name,
-                    likeNumber=item.like_number,
-                    commentNumber=item.comment_number,
-                    content=item.content,
-                    startTime=item.start_time,
-                    endTime=item.end_time
-                    )
-                    retdata.append(response)
-
+        # if type == 'askAllTopic':  # 请求所有活动
+        #     data = self.db.query(Topic).all()  # 返回的是元组
+        #     for item in data:
+        #             response = dict(
+        #             topicId=item.topicId,    # item后的字串应与数据表中一致。
+        #             name=item.name,
+        #             likeNumber=item.like_number,
+        #             commentNumber=item.comment_number,
+        #             content=item.content,
+        #             startTime=item.start_time,
+        #             endTime=item.end_time
+        #             )
+        #             retdata.append(response)
         #
+        # #
         # elif type == 'askCommentId':   # 一次性获得某个话题的所有评论,按点赞数-+排序
         #     topicId = self.get_argument('topicId')
         #     try:
