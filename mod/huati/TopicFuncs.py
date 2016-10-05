@@ -5,8 +5,9 @@
  @introduction:话题的一系列函数
 '''
 import time
+import random
 
-from sqlalchemy import func
+from sqlalchemy import func, desc
 
 from mod.databases.tables import Topic, Tpraise, Tcomment, TopicAdmin, Users
 from ..databases.db import get_db
@@ -14,6 +15,12 @@ from ..databases.db import get_db
 global db
 db = get_db()
 
+# top:返回前top的人数
+global top
+top = 10
+
+global random_list_number
+random_list_number = 10
 global default_quote_comment_number
 default_quote_comment_number = 1
 
@@ -208,17 +215,62 @@ class TopicFuncs(object):
 			print e
 			retjson['content'] = '无点赞记录'
 
-	def get_list_top(self):
+	def get_list_top(self, retjson):
 		'''
         获得话题前x名的简略信息
-        :return: 返回话题前x名的简略列表
+        :return: 返回话题评论前x名的简略列表
         '''
+		try:
+			tops = db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
+				filter(Tcomment.id != default_quote_comment_number).limit(top).all()
 
-	def get_list_random(self):
+			retdata = []
+			for each in tops:
+				comment = dict(
+					time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+					cardnum=each.cardnum,
+					likeN=each.likeN,
+					content=each.content
+				)
+				retdata.append(comment)
+			retjson['content'] = retdata
+		except Exception, e:
+			print e
+			retjson['content'] = '查询出错'
+
+	def get_list_random(self, retjson):
 		'''
         获得后面随机y个话题
         :return: y个话题的列表
         '''
+		try:
+			# 最高的多少名
+			# l = [1,2,3,43,4,5,6]
+			# random.shuffle(l)
+			# retjson['code'] = 'dsds'
+			# retjson['content'] = l
+			# retjson['code'] = l[-1]
+			tops = db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
+			 	filter(Tcomment.id != default_quote_comment_number).limit(top).all()
+
+			last = tops[-1]
+			least_likeN = last.likeN
+			comments = db.query(Tcomment).filter(Tcomment.id != default_quote_comment_number,
+			                                     Tcomment.likeN<least_likeN).all()
+			# 打乱
+			random.shuffle(comments)
+			retdata = []
+			for each in comments[0:random_list_number]:
+				comment = dict(
+					time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+					cardnum=each.cardnum,
+					likeN=each.likeN,
+					content=each.content
+				)
+				retdata.append(comment)
+			retjson['content'] = retdata
+		except Exception, e:
+			print e
 
 	def get_list_detail(self):
 		'''

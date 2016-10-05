@@ -67,11 +67,11 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 获得排名前x条评论
         elif ask_code == '107':
-            topic_handler.get_list_top()
+            topic_handler.get_list_top(retjson)
 
         # 获得随机的y条评论
         elif ask_code == '108':
-            topic_handler.get_list_random()
+            topic_handler.get_list_random(retjson)
 
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
