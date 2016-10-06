@@ -73,6 +73,10 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
         elif ask_code == '108':
             topic_handler.get_list_random(retjson)
 
+        # 获得某个评论所有回复
+        elif ask_code == '109':
+
+
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
         # if type == 'askAllTopic':  # 请求所有活动

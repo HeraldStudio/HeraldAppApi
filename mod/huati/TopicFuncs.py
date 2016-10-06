@@ -12,17 +12,15 @@ from sqlalchemy import func, desc
 from mod.databases.tables import Topic, Tpraise, Tcomment, TopicAdmin, Users
 from ..databases.db import get_db
 
-global db
+global db, top, random_list_number, default_quote_comment_number, topic_number
 db = get_db()
-
-# top:返回前top的人数
-global top
 top = 10
-
-global random_list_number
+# top:返回前top的人数
 random_list_number = 10
-global default_quote_comment_number
+# 默认评论引用
 default_quote_comment_number = 1
+# 默认返回话题数
+topic_number = 10
 
 
 class TopicFuncs(object):
@@ -272,6 +270,13 @@ class TopicFuncs(object):
 		except Exception, e:
 			print e
 
+
+	def get_topics_list(self,retjson):
+		'''
+		返回最新x个话题简略信息列表
+		:return:列表
+		'''
+		try:
 	def get_list_detail(self):
 		'''
         获得话题详细信息列表（预留接口，不一定用）
