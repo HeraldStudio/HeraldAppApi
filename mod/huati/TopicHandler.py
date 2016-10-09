@@ -75,25 +75,13 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 获得某个评论所有回复
         elif ask_code == '109':
+            pass
 
-
+        # 获得最新x个话题
+        elif ask_code == '110':
+            topic_handler.get_topics_list(retjson)
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
-        # if type == 'askAllTopic':  # 请求所有活动
-        #     data = self.db.query(Topic).all()  # 返回的是元组
-        #     for item in data:
-        #             response = dict(
-        #             topicId=item.topicId,    # item后的字串应与数据表中一致。
-        #             name=item.name,
-        #             likeNumber=item.like_number,
-        #             commentNumber=item.comment_number,
-        #             content=item.content,
-        #             startTime=item.start_time,
-        #             endTime=item.end_time
-        #             )
-        #             retdata.append(response)
-        #
-        # #
         # elif type == 'askCommentId':   # 一次性获得某个话题的所有评论,按点赞数-+排序
         #     topicId = self.get_argument('topicId')
         #     try:

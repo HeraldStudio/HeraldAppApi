@@ -271,11 +271,21 @@ class TopicFuncs(object):
             print e
 
 
-    def get_topics_list(self,retjson):
+    def get_topics_list(self, retjson):
         '''
         返回最新x个话题简略信息列表
         :return:列表
         '''
+        try:
+            topics = db.query(Topic).filter(Topic.valid == 1).order_by(desc(Topic.startT)).limit(topic_number).all()
+            retdata = []
+            for topic in topics:
+                retdata.append(self.get_info_simply(topic.id))
+        except Exception, e:
+            print e
+        retjson['content'] = retdata
+
+
     def get_list_detail(self):
         '''
         获得话题详细信息列表（预留接口，不一定用）
@@ -288,6 +298,18 @@ class TopicFuncs(object):
         :param id: 话题id
         :return: 单个话题简略信息
         '''
+        try:
+            topic = db.query(Topic).filter(Topic.id == id, Topic.valid == 1).one()
+            ret_topic = dict(
+                id=topic.id,
+                name=topic.name,
+                startT=topic.startT.strftime('%Y-%m-%d %H:%M:%S'),
+                content=topic.content,
+                commentN=topic.commentN
+            )
+            return ret_topic
+        except Exception, e:
+            return "该话题不存在或已失效"
 
     def get_info_detail(self, id):
         '''
@@ -295,3 +317,11 @@ class TopicFuncs(object):
         :id:话题id
         :return: 返回单个话题详细信息
         '''
+
+    def get_comment_reply(self, cid, retjson):
+        '''
+        获得某个评论全部回复
+        :param cid:评论Id
+        :param retjson:返回json
+        :return:
+         '''
