@@ -10,10 +10,9 @@ import random
 from sqlalchemy import func, desc
 
 from mod.databases.tables import Topic, Tpraise, Tcomment, TopicAdmin, Users
-from ..databases.db import get_db
 
-global db, top, random_list_number, default_quote_comment_number, topic_number
-db = get_db()
+#global db, 
+global top, random_list_number, default_quote_comment_number, topic_number
 top = 10
 # top:返回前top的人数
 random_list_number = 10
@@ -24,6 +23,9 @@ topic_number = 10
 
 
 class TopicFuncs(object):
+    def __init__(self, db):
+        self.db = db 
+
     def commit(self, retjson):
         '''
         提交
@@ -32,9 +34,9 @@ class TopicFuncs(object):
         :return:null
         '''
         try:
-            db.commit()  # retjson默认为成功情况内容
+            self.db.commit()  # retjson默认为成功情况内容
         except:
-            db.rollback()
+            self.db.rollback()
             retjson['code'] = 408  # Request Timeout
             retjson['content'] = 'Some errors when commit to database, please try again'
 
@@ -45,7 +47,7 @@ class TopicFuncs(object):
         :return:success/fail-> 1/0
         '''
         try:
-            exist = db.query(Topic).filter(Topic.content == t_content, Topic.name == t_name).one()
+            exist = self.db.query(Topic).filter(Topic.content == t_content, Topic.name == t_name).one()
             if exist:
                 retjson['code'] = 200
                 retjson['content'] = "该话题已存在"
@@ -56,7 +58,7 @@ class TopicFuncs(object):
                 content=t_content,
                 startT=func.now()  # 开始时间
             )
-            db.merge(new_topic)
+            self.db.merge(new_topic)
             self.commit(retjson)
             retjson['code'] = 200
             retjson['content'] = "添加话题成功"
@@ -68,7 +70,7 @@ class TopicFuncs(object):
         :return: success/fail
         '''
         try:
-            exist = db.query(Topic).filter(Topic.id == id, Topic.valid == 1).one()
+            exist = self.db.query(Topic).filter(Topic.id == id, Topic.valid == 1).one()
             if exist:
                 exist.valid = 0
                 self.commit(retjson)
@@ -88,7 +90,7 @@ class TopicFuncs(object):
         '''
 
         try:
-            exist = db.query(Tcomment).filter(Tcomment.id == tid, Tcomment.valid == 1).one()
+            exist = self.db.query(Tcomment).filter(Tcomment.id == tid, Tcomment.valid == 1).one()
             if exist:
                 # 判断是否为管理员或评论者
                 # todo：是否为管理员
@@ -115,10 +117,12 @@ class TopicFuncs(object):
         @attention：注意是否是一级评论
         '''
         try:
-            u_exist = db.query(Users).filter(Users.cardnum == cardnum).one()
+            # TODO 将注释删除
+            #u_exist = self.db.query(Users).filter(Users.cardnum == cardnum).one()
+            u_exist = True
             if u_exist:
                 try:
-                    exist = db.query(Tcomment).filter(Tcomment.topicid == tid,
+                    exist = self.db.query(Tcomment).filter(Tcomment.topicid == tid,
                                                       Tcomment.cardnum == cardnum,
                                                       Tcomment.content == content,
                                                       Tcomment.valid == 1).one()
@@ -128,12 +132,13 @@ class TopicFuncs(object):
                     print e
                     agree = 0  # 是否能评论
                     # 保证只能评论话题或评论一级评论
-                    if quo == default_quote_comment_number:  # 为直接评论话题
+                    if int(quo) == default_quote_comment_number:  # 为直接评论话题
                         agree = 1
                     else:
+                        print ("error")
                         # 查找出该评论的评论
                         try:
-                            comment = db.query(Tcomment).filter(Tcomment.id == quo).one()
+                            comment = self.db.query(Tcomment).filter(Tcomment.id == quo).one()
                             # 如果该评论评论的是一级评论：
                             if comment.quote == default_quote_comment_number:
                                 agree = 1
@@ -150,7 +155,7 @@ class TopicFuncs(object):
                             quote=quo,  # 评论引用，为评论Id，作为一级评论的回复
                             anonymous=ano
                         )
-                        db.merge(new_comment)
+                        self.db.merge(new_comment)
                         retjson['content'] = '评论成功'
                         self.commit(retjson)
 
@@ -166,7 +171,7 @@ class TopicFuncs(object):
         :return:
         '''
         try:
-            exist = db.query(Tpraise).filter(Tpraise.cardnum == cardnum, Tpraise.valid == 1,
+            exist = self.db.query(Tpraise).filter(Tpraise.cardnum == cardnum, Tpraise.valid == 1,
                                              Tpraise.commentid == cid).one()
             if exist:
                 retjson['content'] = '失败，之前已点过赞'
@@ -174,14 +179,14 @@ class TopicFuncs(object):
             print e
             # 查看该评论是否存在：
             try:
-                c_exist = db.query(Tcomment).filter(Tcomment.id == cid).one()
+                c_exist = self.db.query(Tcomment).filter(Tcomment.id == cid).one()
                 c_exist.likeN += 1
                 new_parase = Tpraise(
                     cardnum=cardnum,
                     commentid=cid,
                     paraseT=func.now()
                 )
-                db.merge(new_parase)
+                self.db.merge(new_parase)
                 retjson['content'] = '点赞成功'
                 self.commit(retjson)
             except Exception, e:
@@ -196,12 +201,12 @@ class TopicFuncs(object):
         :return: 1/0
         '''
         try:
-            exist = db.query(Tpraise).filter(Tpraise.cardnum == cardnum, Tpraise.valid == 1,
+            exist = self.db.query(Tpraise).filter(Tpraise.cardnum == cardnum, Tpraise.valid == 1,
                                              Tpraise.commentid == cid).one()
             if exist:
                 exist.valid = 0
                 try:
-                    c_exist = db.query(Tcomment).filter(Tcomment.id == cid).one()
+                    c_exist = self.db.query(Tcomment).filter(Tcomment.id == cid).one()
                     c_exist.likeN -= 1
                     retjson['content'] = '取消赞成功'
                     self.commit(retjson)
@@ -218,8 +223,10 @@ class TopicFuncs(object):
         获得话题前x名的简略信息
         :return: 返回话题评论前x名的简略列表
         '''
+        #print(default_quote_comment_number)
+
         try:
-            tops = db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
+            tops = self.db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
                 filter(Tcomment.id != default_quote_comment_number).limit(top).all()
 
             retdata = []
@@ -248,12 +255,12 @@ class TopicFuncs(object):
             # retjson['code'] = 'dsds'
             # retjson['content'] = l
             # retjson['code'] = l[-1]
-            tops = db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
+            tops = self.db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
                  filter(Tcomment.id != default_quote_comment_number).limit(top).all()
 
             last = tops[-1]
             least_likeN = last.likeN
-            comments = db.query(Tcomment).filter(Tcomment.id != default_quote_comment_number,
+            comments = self.db.query(Tcomment).filter(Tcomment.id != default_quote_comment_number,
                                                  Tcomment.likeN<least_likeN).all()
             # 打乱
             random.shuffle(comments)
@@ -277,7 +284,7 @@ class TopicFuncs(object):
         :return:列表
         '''
         try:
-            topics = db.query(Topic).filter(Topic.valid == 1).order_by(desc(Topic.startT)).limit(topic_number).all()
+            topics = self.db.query(Topic).filter(Topic.valid == 1).order_by(desc(Topic.startT)).limit(topic_number).all()
             retdata = []
             for topic in topics:
                 retdata.append(self.get_info_simply(topic.id))
@@ -291,6 +298,7 @@ class TopicFuncs(object):
         获得话题详细信息列表（预留接口，不一定用）
         :return: 详细信息列表
         '''
+        pass
 
     def get_info_simply(self, id):
         '''
@@ -299,7 +307,7 @@ class TopicFuncs(object):
         :return: 单个话题简略信息
         '''
         try:
-            topic = db.query(Topic).filter(Topic.id == id, Topic.valid == 1).one()
+            topic = self.db.query(Topic).filter(Topic.id == id, Topic.valid == 1).one()
             ret_topic = dict(
                 id=topic.id,
                 name=topic.name,
@@ -317,6 +325,7 @@ class TopicFuncs(object):
         :id:话题id
         :return: 返回单个话题详细信息
         '''
+        pass
 
     def get_comment_reply(self, cid, retjson):
         '''
@@ -325,3 +334,4 @@ class TopicFuncs(object):
         :param retjson:返回json
         :return:
          '''
+        pass

@@ -7,9 +7,10 @@ from sqlalchemy import exists
 from sqlalchemy.orm.exc import NoResultFound
 
 from BaseHandlerh import BaseHandler
-import Database.tables
-from Database.tables import Topic, Likes,Comment,CommentLike
-from Database.models import connection
+import mod.Database.tables
+from mod.database.tables import Topic, Likes,Comment,CommentLike
+#from mod.database.models import connection
+
 import TopicFuncs
 
 

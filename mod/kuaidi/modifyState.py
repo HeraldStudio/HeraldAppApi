@@ -19,7 +19,7 @@ class ModifyStateHandler(BaseHandler):
     工作人员更新快递状态, 通过手机号和订单id确定
     工作人员需要登录
     """
-        
+
     def post(self):
         retjson = generate_ret("express", 200)
 

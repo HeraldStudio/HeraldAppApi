@@ -3,10 +3,10 @@
 import json
 
 from sqlalchemy import desc
-import timestamp
+#import timestamp
 
 from mod.databases.tables import Tcomment
-from ..Basehandler import BaseHandler
+from mod.Basehandler import BaseHandler
 from TopicFuncs import TopicFuncs
 
 
@@ -14,10 +14,10 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
     def judge_user(self, cardnum):
         '''
-		todo检验该用户是否合法
-		:param cardnum: 一卡通号
-		:return: 1/0
-		'''
+        todo检验该用户是否合法
+        :param cardnum: 一卡通号
+        :return: 1/0
+        ''' 
 
         return 1
 
@@ -26,7 +26,7 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
         cardnum = self.get_argument('cardnum')
         retjson = {'code': '200', 'content': 'none'}
         retdata = []
-        topic_handler = TopicFuncs()
+        topic_handler = TopicFuncs(self.db)
         # 发布话题（需管理员）
         if ask_code == '101':
             #todo:待判断话题发布者是否有权限
@@ -43,7 +43,7 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
         elif ask_code == '103':
             content = self.get_argument('content')
             topic_id = self.get_argument('tid')
-            quo = self.get_argument('quo')  # 是否为评论引用，1为不是
+            quo = self.get_argument('quo', 1)  # 是否为评论引用，1为不是
             ano = self.get_argument('ano')  # 是否匿名，1为匿名
             topic_handler.comment(content, cardnum, topic_id, quo, ano, retjson)
 
