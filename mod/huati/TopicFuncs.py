@@ -1,4 +1,5 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
+
 '''
  @author:黄鑫晨
  @createtime:2016-10-01
@@ -35,7 +36,8 @@ class TopicFuncs(object):
         '''
         try:
             self.db.commit()  # retjson默认为成功情况内容
-        except:
+        except Exception, e:
+            print (e)
             self.db.rollback()
             retjson['code'] = 408  # Request Timeout
             retjson['content'] = 'Some errors when commit to database, please try again'
@@ -83,7 +85,7 @@ class TopicFuncs(object):
 
     def delete_comment(self, tid, cardnum, retjson):
         '''
-        删除评论
+       # 删除评论
         :param id: 评论Id
         :param cardnum:删除者一卡通号
         :return: 1/0
@@ -130,6 +132,11 @@ class TopicFuncs(object):
                         retjson['content'] = '该评论已存在'
                 except Exception, e:
                     print e
+                    print (ano)
+                    is_anonymous = False
+                    if ano == 1:
+                        is_anonymous = True
+
                     agree = 0  # 是否能评论
                     # 保证只能评论话题或评论一级评论
                     if int(quo) == default_quote_comment_number:  # 为直接评论话题
@@ -153,7 +160,7 @@ class TopicFuncs(object):
                             content=content,
                             commentT=func.now(),
                             quote=quo,  # 评论引用，为评论Id，作为一级评论的回复
-                            anonymous=ano
+                            anonymous = is_anonymous
                         )
                         self.db.merge(new_comment)
                         retjson['content'] = '评论成功'
@@ -218,32 +225,41 @@ class TopicFuncs(object):
             print e
             retjson['content'] = '无点赞记录'
 
-    def get_list_top(self, retjson):
+    def get_list_top(self, retjson, tid):
         '''
         获得话题前x名的简略信息
         :return: 返回话题评论前x名的简略列表
         '''
-        #print(default_quote_comment_number)
+        default_quote_comment_number = 3
 
         try:
             tops = self.db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
-                filter(Tcomment.id != default_quote_comment_number).limit(top).all()
+                filter(Tcomment.id != default_quote_comment_number and Tcomment.topicid == tid).limit(top).all()
 
             retdata = []
             for each in tops:
-                comment = dict(
-                    time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                    cardnum=each.cardnum,
-                    likeN=each.likeN,
-                    content=each.content
-                )
+                if each.anonymous:
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum='匿名小公举'.decode('utf-8'),
+                        likeN=each.likeN,
+                        content=each.content
+                    )
+                    print(comment)
+                else :
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum=each.cardnum,
+                        likeN=each.likeN,
+                        content=each.content
+                    )
                 retdata.append(comment)
             retjson['content'] = retdata
         except Exception, e:
             print e
             retjson['content'] = '查询出错'
 
-    def get_list_random(self, retjson):
+    def get_list_random(self, retjson, tid):
         '''
         获得后面随机y个话题
         :return: y个话题的列表
@@ -256,7 +272,7 @@ class TopicFuncs(object):
             # retjson['content'] = l
             # retjson['code'] = l[-1]
             tops = self.db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
-                 filter(Tcomment.id != default_quote_comment_number).limit(top).all()
+                 filter(Tcomment.id != default_quote_comment_number and Tcomment.topicid == tid).limit(top).all()
 
             last = tops[-1]
             least_likeN = last.likeN
@@ -266,12 +282,23 @@ class TopicFuncs(object):
             random.shuffle(comments)
             retdata = []
             for each in comments[0:random_list_number]:
-                comment = dict(
-                    time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                    cardnum=each.cardnum,
-                    likeN=each.likeN,
-                    content=each.content
-                )
+
+                if each.anonymous:
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum='匿名小公举'.decode('utf-8'),
+                        likeN=each.likeN,
+                        content=each.content
+                    )
+                    print(comment)
+                else :
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum=each.cardnum,
+                        likeN=each.likeN,
+                        content=each.content
+                    )
+
                 retdata.append(comment)
             retjson['content'] = retdata
         except Exception, e:
@@ -335,3 +362,4 @@ class TopicFuncs(object):
         :return:
          '''
         pass
+

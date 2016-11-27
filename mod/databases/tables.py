@@ -170,5 +170,17 @@ class TopicAdmin(Base):
     password = Column(VARCHAR(32), nullable = False)
     token = Column(VARCHAR(64))
 
+class DayLogAnalyze(Base):
+    """
+    每日日志重要信息记录
+    """
+    __tablename__ = "day_log_analyze"
+    id = Column(Integer,nullable = False, primary_key = True)
+    date = Column(VARCHAR(32), nullable = False)            # 表项名称access_api.log-date
+    api_order = Column(VARCHAR(1024), nullable=False)      # 该日Api请求数目(保留前20)
+    ip_order  = Column(VARCHAR(1024), nullable=False)      # 该日ip请求数目(保留前30)
+    every_hour_count = Column(VARCHAR(1024), nullable=False) # 该日每小时访问量
+    device_distribute = Column(VARCHAR(1024), nullable=False) # 该日发送请求的设备分布
+
 
 
