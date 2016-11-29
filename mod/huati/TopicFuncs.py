@@ -132,9 +132,8 @@ class TopicFuncs(object):
                         retjson['content'] = '该评论已存在'
                 except Exception, e:
                     print e
-                    print (ano)
                     is_anonymous = False
-                    if ano == 1:
+                    if ano == u'1':         # 此处传来的数据为unicode, 不能直接与数字1比较
                         is_anonymous = True
 
                     agree = 0  # 是否能评论
@@ -245,7 +244,6 @@ class TopicFuncs(object):
                         likeN=each.likeN,
                         content=each.content
                     )
-                    print(comment)
                 else :
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
