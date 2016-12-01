@@ -253,14 +253,16 @@ class TopicFuncs(object):
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
                         cardnum='匿名小公举'.decode('utf-8'),
                         likeN=each.likeN,
-                        content=each.content
+                        content=each.content,
+                        cid=each.id
                     )
                 else :
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
                         cardnum=each.cardnum,
                         likeN=each.likeN,
-                        content=each.content
+                        content=each.content,
+                        cid = each.id
                     )
                 retdata.append(comment)
             retjson['content'] = retdata
