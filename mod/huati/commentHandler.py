@@ -8,7 +8,7 @@ from Database.tables import Topic,Likes,Comment
 import TopicFuncs
 
 
-class CommentActivity(BaseHandler):  #评论活动
+class CommentActivity(BaseHandler):  #评论话题
     current_time = time.time()
     def post(self):
         retjson = {'code': '', 'content': ''}

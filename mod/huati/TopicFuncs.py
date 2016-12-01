@@ -127,44 +127,55 @@ class TopicFuncs(object):
                     exist = self.db.query(Tcomment).filter(Tcomment.topicid == tid,
                                                       Tcomment.cardnum == cardnum,
                                                       Tcomment.content == content,
-                                                      Tcomment.valid == 1).one()
+                                                      Tcomment.valid == 1,
+                                                      Tcomment.quote == quo).one()
                     if exist:
                         retjson['content'] = '该评论已存在'
+                # 评论不存在
                 except Exception, e:
                     print e
-                    is_anonymous = False
-                    if ano == u'1':         # 此处传来的数据为unicode, 不能直接与数字1比较
-                        is_anonymous = True
+                    try:
+                        # 寻找到该话题
+                        topic = self.db.query(Topic).filter(Topic.id == tid).one()
+                        is_anonymous = False
+                        if ano == u'1':         # 此处传来的数据为unicode, 不能直接与数字1比较
+                            is_anonymous = True
 
-                    agree = 0  # 是否能评论
-                    # 保证只能评论话题或评论一级评论
-                    if int(quo) == default_quote_comment_number:  # 为直接评论话题
-                        agree = 1
-                    else:
-                        print ("error")
-                        # 查找出该评论的评论
-                        try:
-                            comment = self.db.query(Tcomment).filter(Tcomment.id == quo).one()
-                            # 如果该评论评论的是一级评论：
-                            if comment.quote == default_quote_comment_number:
-                                agree = 1
-                        except Exception, e:
-                            print e
-                            retjson['content'] = '该评论引用有误'
-                    # 保证只能评论话题或评论一级评论
-                    if agree == 1:
-                        new_comment = Tcomment(
+                        agree = 0  # 是否能评论
+                        # 保证只能评论话题或评论一级评论
+                        if int(quo) == default_quote_comment_number:  # 为直接评论话题
+                             agree = 1
+                            # 评论数+1
+                             topic.commentN += 1
+                        else:
+                            print ("error")
+                            # 查找出该评论的评论
+                            try:
+                                comment = self.db.query(Tcomment).filter(Tcomment.id == quo).one()
+                                # 如果该评论评论的是一级评论：
+                                if comment.quote == default_quote_comment_number:
+                                  agree = 1
+                            except Exception, e:
+                                 print e
+                                 retjson['content'] = '该评论引用有误,只能评论一级评论'
+                        # 保证只能评论话题或评论一级评论
+                        if agree == 1:
+                            new_comment = Tcomment(
                             topicid=tid,
                             cardnum=cardnum,
                             content=content,
                             commentT=func.now(),
                             quote=quo,  # 评论引用，为评论Id，作为一级评论的回复
-                            anonymous = is_anonymous
-                        )
-                        self.db.merge(new_comment)
-                        retjson['content'] = '评论成功'
-                        self.commit(retjson)
+                            anonymous=is_anonymous
+                            )
+                            self.db.merge(new_comment)
+                            retjson['content'] = '评论成功'
+                            self.commit(retjson)
 
+                    except Exception, e:
+                        print e
+                        retjson['code'] = '400'
+                        retjson['content'] = '该话题不存在'
         except Exception, e:
             print e
             retjson['content'] = '该用户不存在'

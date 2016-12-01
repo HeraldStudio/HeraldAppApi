@@ -10,7 +10,7 @@ from mod.Basehandler import BaseHandler
 from TopicFuncs import TopicFuncs
 
 
-class TopicHandler(BaseHandler):  #  处理客户端一系列请求
+class TopicHandler(BaseHandler):  # 处理客户端一系列请求
 
     def judge_user(self, cardnum):
         '''
