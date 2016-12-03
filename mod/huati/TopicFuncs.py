@@ -192,6 +192,7 @@ class TopicFuncs(object):
                                              Tpraise.commentid == cid).one()
             if exist:
                 retjson['content'] = '失败，之前已点过赞'
+                retjson['code'] = 300
         except Exception, e:
             print e
             # 查看该评论是否存在：
