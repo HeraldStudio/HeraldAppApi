@@ -42,6 +42,17 @@ class TopicFuncs(object):
             retjson['code'] = 408  # Request Timeout
             retjson['content'] = 'Some errors when commit to database, please try again'
 
+    def __is_parased(self, cardnum, each):
+        is_parased = 0
+        try:
+            praise_entry = self.db.query(Tpraise).filter(Tpraise.cardnum == cardnum, Tpraise.commentid == each.id).one()
+            # 点过赞
+            if praise_entry:
+                is_parased = 1
+        except Exception, e:
+            is_parased = 0
+        return is_parased
+
     def add_topic(self, t_name, t_content, retjson):
         '''
         添加话题
@@ -235,34 +246,38 @@ class TopicFuncs(object):
             print e
             retjson['content'] = '无点赞记录'
 
-    def get_list_top(self, retjson, tid):
+    def get_list_top(self, retjson, tid, cardnum):
         '''
-        获得话题前x名的简略信息
+        获得话题前x名评论的简略信息
         :return: 返回话题评论前x名的简略列表
         '''
         default_quote_comment_number = 3
-
         try:
             tops = self.db.query(Tcomment).order_by(desc(Tcomment.likeN)). \
                 filter(Tcomment.id != default_quote_comment_number and Tcomment.topicid == tid).limit(top).all()
 
             retdata = []
             for each in tops:
+                # 该用户是否已经给该评论点过赞，0为没点，1为点过
+                is_parased = self.__is_parased(cardnum,each)
+                # 匿名
                 if each.anonymous:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        cardnum='匿名小公举'.decode('utf-8'),
+                        cardnum='匿名用户'.decode('utf-8'),
                         likeN=each.likeN,
                         content=each.content,
-                        cid=each.id
+                        cid=each.id,
+                        parase=is_parased  # 是否点过赞
                     )
-                else :
+                else:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
                         cardnum=each.cardnum,
                         likeN=each.likeN,
                         content=each.content,
-                        cid = each.id
+                        cid=each.id,
+                        parase=is_parased  # 是否点过赞
                     )
                 retdata.append(comment)
             retjson['content'] = retdata
@@ -270,9 +285,48 @@ class TopicFuncs(object):
             print e
             retjson['content'] = '查询出错'
 
-    def get_list_random(self, retjson, tid):
+    def get_list_latest(self, retjson, topic_id, cardnum):
         '''
-        获得后面随机y个话题
+        获得话题最新x名评论的简略信息
+        :return: 返回话题最新x名的简略列表
+        '''
+        default_quote_comment_number = 3
+        try:
+            tops = self.db.query(Tcomment).order_by(desc(Tcomment.commentT)). \
+                filter(Tcomment.id != default_quote_comment_number and Tcomment.topicid == topic_id).limit(top).all()
+
+            retdata = []
+            for each in tops:
+                # 该用户是否已经给该评论点过赞，0为没点，1为点过
+                is_parased = self.__is_parased(cardnum, each)
+                # 匿名
+                if each.anonymous:
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum='匿名用户'.decode('utf-8'),
+                        likeN=each.likeN,
+                        content=each.content,
+                        cid=each.id,
+                        parase=is_parased  # 是否点过赞
+                    )
+                else:
+                    comment = dict(
+                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
+                        cardnum=each.cardnum,
+                        likeN=each.likeN,
+                        content=each.content,
+                        cid=each.id,
+                        parase=is_parased  # 是否点过赞
+                    )
+                retdata.append(comment)
+            retjson['content'] = retdata
+        except Exception, e:
+            print e
+            retjson['content'] = '查询出错'
+
+    def get_list_random(self, retjson, tid, cardnum):
+        '''
+        获得后面随机y个话题的评论
         :return: y个话题的列表
         '''
         try:
@@ -293,7 +347,7 @@ class TopicFuncs(object):
             random.shuffle(comments)
             retdata = []
             for each in comments[0:random_list_number]:
-
+                # 匿名
                 if each.anonymous:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
@@ -302,21 +356,20 @@ class TopicFuncs(object):
                         content=each.content
                     )
                     print(comment)
-                else :
+                else:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
                         cardnum=each.cardnum,
                         likeN=each.likeN,
                         content=each.content
                     )
-
-                retdata.append(comment)
+                    retdata.append(comment)
             retjson['content'] = retdata
         except Exception, e:
             print e
 
 
-    def get_topics_list(self, retjson):
+    def get_topics_list(self, retjson, cardnum):
         '''
         返回最新x个话题简略信息列表
         :return:列表
@@ -326,6 +379,7 @@ class TopicFuncs(object):
             retdata = []
             for topic in topics:
                 retdata.append(self.get_info_simply(topic.id))
+
         except Exception, e:
             print e
         retjson['content'] = retdata

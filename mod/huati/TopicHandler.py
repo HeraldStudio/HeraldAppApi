@@ -67,13 +67,13 @@ class TopicHandler(BaseHandler):  # 处理客户端一系列请求
 
         # 获得排名前x条评论
         elif ask_code == '107':
-            topic_id = self.get_argument('tid') # 通过对应的话题id获取评论列表
-            topic_handler.get_list_top(retjson, topic_id)
+            topic_id = self.get_argument('tid')  # 通过对应的话题id获取评论列表
+            topic_handler.get_list_top(retjson, topic_id, cardnum)
 
         # 获得随机的y条评论
         elif ask_code == '108':
             topic_id = self.get_argument('tid') # 通过对应的话题id获取评论列表
-            topic_handler.get_list_random(retjson, topic_id)
+            topic_handler.get_list_random(retjson, topic_id, cardnum)
 
         # 获得某个评论所有回复
         elif ask_code == '109':
@@ -82,6 +82,11 @@ class TopicHandler(BaseHandler):  # 处理客户端一系列请求
         # 获得最新x个话题
         elif ask_code == '110':
             topic_handler.get_topics_list(retjson)
+
+        # 获得最新x条评论
+        elif ask_code == '111':
+            topic_id = self.get_argument('tid')  # 通过对应的话题id获取评论列表
+            topic_handler.get_list_latest(retjson, topic_id, cardnum)
 
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
