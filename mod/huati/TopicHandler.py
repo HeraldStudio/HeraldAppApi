@@ -81,7 +81,7 @@ class TopicHandler(BaseHandler):  # 处理客户端一系列请求
 
         # 获得最新x个话题
         elif ask_code == '110':
-            topic_handler.get_topics_list(retjson)
+            topic_handler.get_topics_list(retjson, cardnum)
 
         # 获得最新x条评论
         elif ask_code == '111':
