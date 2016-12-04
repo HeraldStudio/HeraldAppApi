@@ -12,7 +12,9 @@ from sqlalchemy import func, desc
 
 from mod.databases.tables import Topic, Tpraise, Tcomment, TopicAdmin, Users
 
-#global db, 
+#global db,
+from mod.huati.getUserInfo import User_info_handler
+
 global top, random_list_number, default_quote_comment_number, topic_number
 top = 10
 # top:返回前top的人数
@@ -24,8 +26,10 @@ topic_number = 10
 
 
 class TopicFuncs(object):
+
     def __init__(self, db):
-        self.db = db 
+        self.db = db
+
 
     def commit(self, retjson):
         '''
@@ -117,7 +121,7 @@ class TopicFuncs(object):
             print e
             retjson['content'] = "该评论不存在或已删除"
 
-    def comment(self, content, cardnum, tid, quo, ano, retjson):
+    def comment(self, content, cardnum, tid, quo, ano, uuid, retjson):
         '''
         评论话题
         :param content: 评论内容
@@ -125,10 +129,12 @@ class TopicFuncs(object):
         :param id: 话题id
         :param quo:是否为评论引用，如果为default_quote_comment_number则不是，否则为评论Id
         :param ano:是否匿名，1为匿名，0为不匿名
+        :param uuid:用户的uuid，用来完善真实信息
         :param retjson: 返回值
         :return: success/fail-> 1/0
         @attention：注意是否是一级评论
         '''
+
         try:
             # TODO 将注释删除
             #u_exist = self.db.query(Users).filter(Users.cardnum == cardnum).one()
@@ -170,6 +176,8 @@ class TopicFuncs(object):
                                  print e
                                  retjson['content'] = '该评论引用有误,只能评论一级评论'
                         # 保证只能评论话题或评论一级评论
+                        # 完善学生真实姓名
+                        self.__user_info_handler.complete_user_name(cardnum, uuid)
                         if agree == 1:
                             new_comment = Tcomment(
                             topicid=tid,
@@ -265,16 +273,17 @@ class TopicFuncs(object):
                 if each.anonymous:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        cardnum='匿名用户'.decode('utf-8'),
+                        real_name='匿名用户'.decode('utf-8'),
                         likeN=each.likeN,
                         content=each.content,
                         cid=each.id,
                         parase=is_parased  # 是否点过赞
                     )
                 else:
+                    real_name = user_info_handler.get_user_name_from_cardnum(cardnum)
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        cardnum=each.cardnum,
+                        real_name=real_name,
                         likeN=each.likeN,
                         content=each.content,
                         cid=each.id,
@@ -304,7 +313,7 @@ class TopicFuncs(object):
                 if each.anonymous:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        cardnum='匿名用户'.decode('utf-8'),
+                        user_num='匿名用户'.decode('utf-8'),
                         likeN=each.likeN,
                         content=each.content,
                         cid=each.id,
@@ -313,7 +322,7 @@ class TopicFuncs(object):
                 else:
                     comment = dict(
                         time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        cardnum=each.cardnum,
+                        user_num=each.cardnum,
                         likeN=each.likeN,
                         content=each.content,
                         cid=each.id,
@@ -369,8 +378,7 @@ class TopicFuncs(object):
         except Exception, e:
             print e
 
-
-    def get_topics_list(self, retjson, cardnum):
+    def get_topics_list(self, retjson):
         '''
         返回最新x个话题简略信息列表
         :return:列表
@@ -384,7 +392,6 @@ class TopicFuncs(object):
         except Exception, e:
             print e
         retjson['content'] = retdata
-
 
     def get_list_detail(self):
         '''
