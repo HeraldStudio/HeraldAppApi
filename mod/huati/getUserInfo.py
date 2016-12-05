@@ -7,8 +7,6 @@
 import json
 import urllib
 import urllib2
-from mod.databases.db import get_db
-db = get_db()
 from mod.databases.tables import Users
 _uuid = 'fd4b2c58db1e394d312c9e7ca53e588999f491ce'
 
