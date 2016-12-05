@@ -4,12 +4,12 @@ import datetime
 
 
 from ..Basehandler import BaseHandler
-from ..databases.tables import ActivCommitUser,Activity
+from ..databases.tables import ActivCommitUser, Activity
 from ..return_code_config import codeTable
 from sqlalchemy.orm.exc import NoResultFound
 
 class HuoException(RuntimeError):
-    def __init__(self,code):
+    def __init__(self, code):
         self.code = code
 
 class HuodongCommit(BaseHandler):

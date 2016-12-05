@@ -8,9 +8,12 @@ from sqlalchemy import desc
 from mod.databases.tables import Tcomment
 from mod.Basehandler import BaseHandler
 from TopicFuncs import TopicFuncs
+from mod.huati.getUserInfo import User_info_handler
 
 
 class TopicHandler(BaseHandler):  # 处理客户端一系列请求
+
+
 
     def judge_user(self, cardnum):
         '''
@@ -45,7 +48,8 @@ class TopicHandler(BaseHandler):  # 处理客户端一系列请求
             topic_id = self.get_argument('tid')
             quo = self.get_argument('quo', 1)  # 是否为评论引用，1为不是
             ano = self.get_argument('ano')  # 是否匿名，1为匿名
-            topic_handler.comment(content, cardnum, topic_id, quo, ano, retjson)
+            uuid = self.get_argument('uuid')
+            topic_handler.comment(content, cardnum, topic_id, quo, ano, uuid, retjson)
 
         # 删除评论
         elif ask_code == '104':
