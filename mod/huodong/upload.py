@@ -51,8 +51,12 @@ class UploadPichandler(BaseHandler):
                         img.save(filepath,'jpeg')
                         retjson['content'] = database_path
                 else:
-                    retjson['code'] = 500
-                    retjson['content'] = u'文件为空'
+                    picurl = self.get_argument('pic_url')
+                    if picurl:
+                        retjson['content'] = picurl
+                    else:
+                        retjson['code'] = 500
+                        retjson['content'] = u'文件为空'
             else:
                 raise UploadException(400,u'请先登录')
         except UploadException,e:

@@ -17,6 +17,7 @@ from mod.huodong.getHuodong import getHuodong
 from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
 from mod.huodong.upload import UploadPichandler
+from mod.huodong.adminHuodong import AdminHuodong
 
 from mod.kuaidi.deleteRecord import DeleteRecordHandler
 from mod.kuaidi.getTimeList import GetTimeListHandler
@@ -43,6 +44,7 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),
             (r'/herald/api/v1/huodong/upload',UploadPichandler),
+            (r'/herald/api/v1/huodong/admin',AdminHuodong),
             (r'/herald/api/v1/deliver/delete', DeleteRecordHandler),
             (r'/herald/api/v1/deliver/timelist', GetTimeListHandler),
             (r'/herald/api/v1/deliver/change', ModifyStateHandler),
@@ -55,7 +57,7 @@ class Application(tornado.web.Application):
             (r"/herald/api/v1/queryEmptyClassrooms/m/(.*)", NewGetHandler),
             (r"/herald/api/v1/queryEmptyClassrooms/simple", SimpleHander),
             (r"/herald/api/v1/queryEmptyClassrooms/complex", ComplexHander),
-            (r"/herald/api/v1/feedback",FeedBackHandler),
+            (r"/herald/a00-24:0pi/v1/feedback",FeedBackHandler),
             (r"/herald/api/v1/feedback/success", FeedBackSuccessHandler),
             (r"/herald/api/v1/feedback/details", FeedBackDetailsHandler),
             (r'/herald/api/v1/topic', TopicHandler),

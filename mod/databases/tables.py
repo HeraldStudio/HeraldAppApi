@@ -85,6 +85,7 @@ class ActivCommitUser(Base):
     latestLogin = Column(DateTime())    # 上次登录时间
     login_fail_time = Column(Integer)   # 登录失败次数
     isvalid     = Column(Boolean(),default=True)  # 发布活动是否按照基本法
+    level       = Column(Integer,default=3) #user权限（1为普通管理员，2为活动提交者，3是闲杂人等）
 
 
 # 快递模块

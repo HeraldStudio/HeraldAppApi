@@ -15,7 +15,7 @@ class HuodongLogin(BaseHandler):
         self.set_header('Access-Control-Allow-Methods','GET')
         self.set_header('Access-Control-Allow-Headers','token')
 
-        retjson = {'code':200}
+        retjson = {'code':200,'level':3}
 
         # if the argument is enough
         try:
@@ -65,6 +65,7 @@ class HuodongLogin(BaseHandler):
             self.write_back(retjson)
             return
 
+        retjson['level'] = matched_user.level
         matched_user.login_fail_time = 0
         matched_user.latestLogin = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cookie_value = matched_user.user + '_' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

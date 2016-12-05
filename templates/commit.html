@@ -76,6 +76,7 @@
             <input class="form-control my_input" placeholder="活动详情链接(可不填)" id="url">
             <input class="datepicker form-control my_input" data-date-format="yyyy-mm-dd" placeholder="开始日期" id="start_time" readonly>
             <input class="datepicker form-control my_input" data-date-format="yyyy-mm-dd" placeholder="结束日期" id="end_time" readonly>
+            <input class="form-control my_input" placeholder="图片链接(只需要填此项或上传图片一种方式即可)" id="mypic_url">
             <form  action="./upload" enctype="multipart/form-data" id="up_img_WU_FILE_1" method='post' onsubmit="return fileupload()">
                 <p>宣传海报上传:</p>
                 <div class="box">
@@ -114,6 +115,7 @@
         var introduce = $("#introduce");
         var activity_location = $("#location");
         var activity_time = $("#activity_time");
+        var mypic_url = $("#mypic_url");
         var post_button = $("#post");
         function getFile(event){
             var filename = $(event).val();
@@ -134,7 +136,7 @@
                     }
                 });
             } else {
-                postdata("");
+                postdata(mypic_url.val());
             }
         }
         function postdata(picurl){
