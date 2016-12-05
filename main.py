@@ -29,6 +29,7 @@ from mod.kuaidi.adminLogin import ExpressAdminLoginHandler
 from mod.emptyroom.handler import NewGetHandler
 from mod.emptyroom.oldHandler import GetHandler,SimpleHander,ComplexHander
 from mod.service.feedbackHandler import FeedBackHandler,FeedBackSuccessHandler,FeedBackDetailsHandler
+from mod.log.LogHandler import LogHandler
 
 from config import COOKIE_SECRET
 
@@ -61,6 +62,7 @@ class Application(tornado.web.Application):
             (r"/herald/api/v1/feedback/success", FeedBackSuccessHandler),
             (r"/herald/api/v1/feedback/details", FeedBackDetailsHandler),
             (r'/herald/api/v1/topic', TopicHandler),
+            (r'/herald/api/v1/log', LogHandler),
             (r'/herald/.*', PageNotFoundHandler)
 
 

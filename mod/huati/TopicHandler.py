@@ -8,9 +8,10 @@ from sqlalchemy import desc
 from mod.databases.tables import Tcomment
 from mod.Basehandler import BaseHandler
 from TopicFuncs import TopicFuncs
+from mod.huati.getUserInfo import User_info_handler
 
 
-class TopicHandler(BaseHandler):  #  处理客户端一系列请求
+class TopicHandler(BaseHandler):  # 处理客户端一系列请求
 
     def judge_user(self, cardnum):
         '''
@@ -29,7 +30,7 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
         topic_handler = TopicFuncs(self.db)
         # 发布话题（需管理员）
         if ask_code == '101':
-            #todo:待判断话题发布者是否有权限
+            # todo:待判断话题发布者是否有权限
             t_name = self.get_argument('name')
             t_content = self.get_argument('content')
             topic_handler.add_topic(t_name, t_content, retjson)
@@ -45,7 +46,8 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
             topic_id = self.get_argument('tid')
             quo = self.get_argument('quo', 1)  # 是否为评论引用，1为不是
             ano = self.get_argument('ano')  # 是否匿名，1为匿名
-            topic_handler.comment(content, cardnum, topic_id, quo, ano, retjson)
+            uuid = self.get_argument('uuid')
+            topic_handler.comment(content, cardnum, topic_id, quo, ano, uuid, retjson)
 
         # 删除评论
         elif ask_code == '104':
@@ -67,13 +69,13 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 获得排名前x条评论
         elif ask_code == '107':
-            topic_id = self.get_argument('tid') # 通过对应的话题id获取评论列表
-            topic_handler.get_list_top(retjson, topic_id)
+            topic_id = self.get_argument('tid')  # 通过对应的话题id获取评论列表
+            topic_handler.get_list_top(retjson, topic_id, cardnum)
 
         # 获得随机的y条评论
         elif ask_code == '108':
-            topic_id = self.get_argument('tid') # 通过对应的话题id获取评论列表
-            topic_handler.get_list_random(retjson, topic_id)
+            topic_id = self.get_argument('tid')  # 通过对应的话题id获取评论列表
+            topic_handler.get_list_random(retjson, topic_id, cardnum)
 
         # 获得某个评论所有回复
         elif ask_code == '109':
@@ -81,8 +83,12 @@ class TopicHandler(BaseHandler):  #  处理客户端一系列请求
 
         # 获得最新x个话题
         elif ask_code == '110':
-            topic_id = self.get_argument('tid') # 通过对应的话题id获取评论列表
             topic_handler.get_topics_list(retjson)
+
+        # 获得最新x条评论
+        elif ask_code == '111':
+            topic_id = self.get_argument('tid')  # 通过对应的话题id获取评论列表
+            topic_handler.get_list_latest(retjson, topic_id, cardnum)
 
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
 
