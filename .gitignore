@@ -1,5 +1,7 @@
 #### joe made this: http://goel.io/joe
 
+.idea/
+HeraldAppApi.iml
 
 ### 数据库相关
 mod/databases/db.py

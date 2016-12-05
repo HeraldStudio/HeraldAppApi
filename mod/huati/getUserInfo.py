@@ -90,7 +90,7 @@ class User_info_handler(object):
             # 匿名
             comment_anonymous = dict(
                 time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                cardnum='匿名用户'.decode('utf-8'),
+                user_name='匿名用户'.decode('utf-8'),
                 likeN=each.likeN,
                 content=each.content,
                 cid=each.id,

@@ -196,8 +196,11 @@ class TopicFuncs(object):
                         retjson['code'] = '400'
                         retjson['content'] = '该话题不存在'
         except Exception, e:
-            print e
-            retjson['content'] = '该用户不存在'
+            print "创建新用户"
+            # new_user = Users(
+            #     cardnum=cardnum
+            # )
+
 
     def parase(self, cardnum, cid, retjson):
         '''
