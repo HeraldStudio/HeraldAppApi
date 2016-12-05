@@ -14,7 +14,8 @@ from mod.databases.tables import Topic, Tpraise, Tcomment, TopicAdmin, Users
 
 #global db,
 from mod.huati.getUserInfo import User_info_handler
-
+from mod.databases.db import get_db
+db = get_db()
 global top, random_list_number, default_quote_comment_number, topic_number
 top = 10
 # top:返回前top的人数
@@ -177,7 +178,8 @@ class TopicFuncs(object):
                                  retjson['content'] = '该评论引用有误,只能评论一级评论'
                         # 保证只能评论话题或评论一级评论
                         # 完善学生真实姓名
-                        self.__user_info_handler.complete_user_name(cardnum, uuid)
+                        user_info_handler = User_info_handler(db)
+                        user_info_handler.complete_user_name(uuid)
                         if agree == 1:
                             new_comment = Tcomment(
                             topicid=tid,
@@ -268,27 +270,9 @@ class TopicFuncs(object):
             retdata = []
             for each in tops:
                 # 该用户是否已经给该评论点过赞，0为没点，1为点过
-                is_parased = self.__is_parased(cardnum,each)
-                # 匿名
-                if each.anonymous:
-                    comment = dict(
-                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        real_name='匿名用户'.decode('utf-8'),
-                        likeN=each.likeN,
-                        content=each.content,
-                        cid=each.id,
-                        parase=is_parased  # 是否点过赞
-                    )
-                else:
-                    real_name = user_info_handler.get_user_name_from_cardnum(cardnum)
-                    comment = dict(
-                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        real_name=real_name,
-                        likeN=each.likeN,
-                        content=each.content,
-                        cid=each.id,
-                        parase=is_parased  # 是否点过赞
-                    )
+                is_parased = self.__is_parased(cardnum, each)
+                user_info_handler = User_info_handler(db)
+                comment = user_info_handler.get_comment_model(each, is_parased, each.anonymous)
                 retdata.append(comment)
             retjson['content'] = retdata
         except Exception, e:
@@ -300,6 +284,8 @@ class TopicFuncs(object):
         获得话题最新x名评论的简略信息
         :return: 返回话题最新x名的简略列表
         '''
+        user_info_handler = User_info_handler(db)
+
         default_quote_comment_number = 3
         try:
             tops = self.db.query(Tcomment).order_by(desc(Tcomment.commentT)). \
@@ -309,25 +295,8 @@ class TopicFuncs(object):
             for each in tops:
                 # 该用户是否已经给该评论点过赞，0为没点，1为点过
                 is_parased = self.__is_parased(cardnum, each)
-                # 匿名
-                if each.anonymous:
-                    comment = dict(
-                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        user_num='匿名用户'.decode('utf-8'),
-                        likeN=each.likeN,
-                        content=each.content,
-                        cid=each.id,
-                        parase=is_parased  # 是否点过赞
-                    )
-                else:
-                    comment = dict(
-                        time=each.commentT.strftime('%Y-%m-%d %H:%M:%S'),
-                        user_num=each.cardnum,
-                        likeN=each.likeN,
-                        content=each.content,
-                        cid=each.id,
-                        parase=is_parased  # 是否点过赞
-                    )
+                user_info_handler = User_info_handler(db)
+                comment = user_info_handler.get_comment_model(each, is_parased, each.anonymous)
                 retdata.append(comment)
             retjson['content'] = retdata
         except Exception, e:

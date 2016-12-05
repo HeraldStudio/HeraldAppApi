@@ -13,8 +13,6 @@ from mod.huati.getUserInfo import User_info_handler
 
 class TopicHandler(BaseHandler):  # 处理客户端一系列请求
 
-
-
     def judge_user(self, cardnum):
         '''
         todo检验该用户是否合法
@@ -32,7 +30,7 @@ class TopicHandler(BaseHandler):  # 处理客户端一系列请求
         topic_handler = TopicFuncs(self.db)
         # 发布话题（需管理员）
         if ask_code == '101':
-            #todo:待判断话题发布者是否有权限
+            # todo:待判断话题发布者是否有权限
             t_name = self.get_argument('name')
             t_content = self.get_argument('content')
             topic_handler.add_topic(t_name, t_content, retjson)
