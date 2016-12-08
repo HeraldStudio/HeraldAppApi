@@ -45,9 +45,12 @@ class HuodongCommit(BaseHandler):
             is_hot      = self.get_argument('is_hot',default=False)
             picurl      = self.get_argument('picurl',default=None)
             detail_url  = self.get_argument('detail_url',None)
-            if not(start_time and end_time and title and introduce and location) or len(introduce)>100:
+            if not(start_time and end_time and title and introduce and location):
                 retjson['code'] = 300
                 retjson['content'] = codeTable[300]
+            elif  len(introduce)>200:
+                retjson['code'] = 411
+                retjson['content'] = codeTable[411]
             else:
                 # if the argument is correct
                 try:
@@ -76,7 +79,7 @@ class HuodongCommit(BaseHandler):
                         detailurl   = detail_url,
                         user        = matched_user.user,
                         association = matched_user.association,
-                        isvalid     = True,
+                        isvalid     = False,
                         ishot       = is_hot
                     )
                     self.db.add(activity)
