@@ -7,11 +7,11 @@
 """
 
 import json
+from mod.Basehandler import BaseHandler
+from mod.databases.tables import DayLogAnalyze
 
 from sqlalchemy import desc
-#import timestamp
-
-from mod.Basehandler import BaseHandler
+import copy
 
 class LogHandler(BaseHandler):
     """
@@ -20,9 +20,36 @@ class LogHandler(BaseHandler):
     """
 
     def post(self):
+        retjson = {'code': '200', 'content': 'None'}
 
-        ask_code = self.get_argument('askcode', default='unsolved')
-        print("hello world")
-        print(ask_code)
-        
+        date_start = self.get_argument('date_start', default='unsolved')
+        date_cnt = int(self.get_argument('date_cnt', default='1'))
 
+        content = []
+        try:
+            log_list = self.db.query(DayLogAnalyze).\
+                    order_by(DayLogAnalyze.date).\
+                    filter(DayLogAnalyze.date >= date_start).\
+                    limit(date_cnt).all()
+                    
+            if log_list:
+                content_item = dict()
+                for i in range(date_cnt):
+                    log = log_list[i]
+                    content_item['date'] = eval(log.date)
+                    content_item['every_hour_count'] = eval(log.every_hour_count)
+                    content_item['api_order'] = eval(log.api_order)
+                    content_item['device_distribute'] = eval(log.device_distribute)
+                    content_item['call_count'] = log.call_count
+                    content_item['ios_version'] = eval(log.ios_version)
+                    content_item['android_version'] = eval(log.android_version)
+
+                    item = copy.deepcopy(content_item)
+                    content.append(item)
+            
+        except Exception as e:
+            print e
+
+        retjson['code'] = 200
+        retjson['content'] =content 
+        self.write(json.dumps(retjson, indent=2, ensure_ascii=False))
