@@ -1,21 +1,21 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
- Create On: December 05, 2016
-    Author: corvo
+@Date   : December 09, 2016
+@Author : corvo
+
+vim: set ts=4 sw=4 tw=99 et:
 """
+
 
 import json
 from mod.Basehandler import BaseHandler
 from mod.databases.tables import DayLogAnalyze
 
-from sqlalchemy import desc
-import copy
-
 class LogHandler(BaseHandler):
     """
-        本模块为日志分析后端模块, 预先分析好的日志先存储于数据库中, 
+        本模块为日志分析后端模块, 预先分析好的日志先存储于数据库中,
         使用时读取数据库中的json信息, 做简单处理后返回
     """
 
@@ -31,10 +31,10 @@ class LogHandler(BaseHandler):
                     order_by(DayLogAnalyze.date).\
                     filter(DayLogAnalyze.date >= date_start).\
                     limit(date_cnt).all()
-                    
+
             if log_list:
-                content_item = dict()
                 for i in range(date_cnt):
+                    content_item = dict()
                     log = log_list[i]
                     content_item['date'] = eval(log.date)
                     content_item['every_hour_count'] = eval(log.every_hour_count)
@@ -44,12 +44,13 @@ class LogHandler(BaseHandler):
                     content_item['ios_version'] = eval(log.ios_version)
                     content_item['android_version'] = eval(log.android_version)
 
-                    item = copy.deepcopy(content_item)
-                    content.append(item)
-            
+                    content.append(content_item)
+
         except Exception as e:
+            retjson['code'] = 500
+            retjson['content'] = 'error'
             print e
 
         retjson['code'] = 200
-        retjson['content'] =content 
+        retjson['content'] = content
         self.write(json.dumps(retjson, indent=2, ensure_ascii=False))

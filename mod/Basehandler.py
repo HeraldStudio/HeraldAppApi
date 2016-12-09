@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 import tornado.web
-import tornado.gen
 from databases.tables import Access_Token,Users,ExpressAdmin
-from sqlalchemy.orm.exc import NoResultFound
 import json
 
 class BaseHandler(tornado.web.RequestHandler):
