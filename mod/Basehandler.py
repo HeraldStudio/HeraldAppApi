@@ -5,6 +5,12 @@ from databases.tables import Access_Token,Users,ExpressAdmin
 import json
 
 class BaseHandler(tornado.web.RequestHandler):
+
+    def set_default_headers(self):
+        """允许提交跨域请求
+        """
+        self.set_header("Access-Control-Allow-Origin", "*")
+
     def options(self):
         retjson = {'code':200}
         self.write_back(retjson)
