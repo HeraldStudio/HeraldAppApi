@@ -216,7 +216,7 @@ class TopicFuncs(object):
                 retjson['content'] = '失败，之前已点过赞'
                 retjson['code'] = 300
         except Exception, e:
-            print e
+            #print e
             # 查看该评论是否存在：
             try:
                 c_exist = self.db.query(Tcomment).filter(Tcomment.id == cid).one()

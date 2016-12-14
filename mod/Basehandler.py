@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 import tornado.web
-import tornado.gen
 from databases.tables import Access_Token,Users,ExpressAdmin
-from sqlalchemy.orm.exc import NoResultFound
 import json
 
 class BaseHandler(tornado.web.RequestHandler):
+
+    def set_default_headers(self):
+        """允许提交跨域请求
+        """
+        self.set_header("Access-Control-Allow-Origin", "*")
+
     def options(self):
         retjson = {'code':200}
         self.write_back(retjson)
