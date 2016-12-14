@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link href="//cdn.bootcss.com/ionic/1.2.3/css/ionic.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/ionic/1.3.2/css/ionic.css" rel="stylesheet">
     <title>小猴偷米社团活动登录</title>
     <style type="text/css">
         .content {
             margin: 10px;
             margin-top: 70px;
         }
-        .list {
-            
+        #error_message{
+            color: red;
         }
     </style>
+    <script src="http://cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
 </head>
+
 <body>
     <div>
         <div class="bar bar-header bar-positive">
-            <h1 class="title">登录</h1>
+            <h1 class="title">用户登录</h1>
         </div>
+
+        <div class="tabs tabs-striped">
+            <a class="tab-item active" id="users">提交活动</a>
+            <a class="tab-item" id="admins">审核活动</a>
+        </div>
+
         <div class="content">
             <div class="list">
                 <label class="item item-input">
@@ -36,51 +44,84 @@
             </button>
         </div>
 
-        <div class="bar bar-footer bar-positive">
-            <h1 class="title">小猴偷米工作室</h1>
-        </div>
-        
-        <!-- <p>11</p> -->
     </div>
-    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var user = $("#user");
-            var pwd = $("#pwd");
-            var error_message = $("#error_message");
-            var login_button = $("#login");
-            var show_message = function(message){
-                error_message.html("<p>"+message+"</p>");
-                error_message.show();
-            }
-            login_button.click(function(event) {
-                if(user.val().length<1||pwd.length<1){
-                    show_message("用户名密码不能为空");
-                } else {
-                    jQuery.ajax({
-                      url: '',
-                      type: 'POST',
-                      dataType: 'json',
-                      data: {
-                        user: user.val(),
-                        password:pwd.val()
-                      },
-                      success: function(data, textStatus, xhr) {
-                        if(data.code==200){
-                            error_message.hide();
-                            window.location.href="./commit";
-                        } else {
-                            show_message(data.content);
-                        }
-                      },
-                      error: function(xhr, textStatus, errorThrown) {
-                        show_message("网络连接错误");
-                      }
-                    });
-                    
-                }
-            });
-        });
-    </script>
 </body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var flag = 2;//判断当前选择的登陆方式，1为管理员审核，2为普通用户提交
+        var user = $("#user");
+        var pwd = $("#pwd");
+        var error_message = $("#error_message");
+        var login_button = $("#login");
+        var show_message = function(message){
+            error_message.html("<p>"+message+"</p>");
+            error_message.show();
+        }
+
+        $("#login").click(function(){
+            $("#login").attr({"disabled":"true"});
+
+            if(user.val().length < 1 || pwd.length < 1){
+                show_message("用户名密码不能为空");
+                $("#login").removeAttr("disabled");
+            } 
+            else {
+                $.ajax({
+                  url: './login',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {
+                    user: user.val(),
+                    password:pwd.val()
+                  },
+                  success: function(data, textStatus, xhr) {
+                    if(data.code == 200){
+                        error_message.hide();
+
+                        if (data.level == 1){
+                            if (flag == 1){
+                                window.location.href = "./admin";
+                            }
+                            if (flag == 2){
+                                window.location.href = "./commit";
+                            }
+                        }
+                        if (data.level == 2){
+                            if (flag == 1){
+                                show_message("您不是管理员，无法审核");
+                                $("#login").removeAttr("disabled");
+                            }
+                            if (flag == 2){
+                                window.location.href = "./commit";
+                            }
+                        }
+
+
+                    } else {
+                        show_message(data.content);
+                        $("#login").removeAttr("disabled");
+                    }
+                  },
+                  error: function(xhr, textStatus, errorThrown) {
+                    show_message("网络连接错误");
+                    $("#login").removeAttr("disabled");
+                  }
+                });  
+            }
+        });
+
+        $("#users").click(function(){
+            flag = 2;
+            $("#users").attr("class", "tab-item active");
+            $("#admins").attr("class", "tab-item");
+        });
+
+        $("#admins").click(function(){
+            flag = 1;
+            $("#users").attr("class", "tab-item");
+            $("#admins").attr("class", "tab-item active");
+        });
+    });
+</script>
 </html>

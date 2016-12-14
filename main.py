@@ -18,6 +18,7 @@ from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
 from mod.huodong.upload import UploadPichandler
 from mod.huodong.adminHuodong import AdminHuodong
+from mod.huodong.adminGetHuodong import AdminGetHuodong
 
 from mod.kuaidi.deleteRecord import DeleteRecordHandler
 from mod.kuaidi.getTimeList import GetTimeListHandler
@@ -46,6 +47,7 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/huodong/login',HuodongLogin),
             (r'/herald/api/v1/huodong/upload',UploadPichandler),
             (r'/herald/api/v1/huodong/admin',AdminHuodong),
+            (r'/herald/api/v1/huodong/admin_get',AdminGetHuodong),
             (r'/herald/api/v1/deliver/delete', DeleteRecordHandler),
             (r'/herald/api/v1/deliver/timelist', GetTimeListHandler),
             (r'/herald/api/v1/deliver/change', ModifyStateHandler),

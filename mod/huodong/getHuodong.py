@@ -44,6 +44,18 @@ class getHuodong(BaseHandler):
             ret_data = []
             for item in data:
                 temp = dict(
+                    # id          = item.id,
+                    # title       = item.title,
+                    # location    = item.location,
+                    # activity_time = item.activitytime,
+                    # association = item.association,
+                    # introduction= item.introduce,
+                    # pic_url     = item.picurl,
+                    # detail_url  = item.detailurl,
+                    # start_time  = item.starttime.strftime("%Y-%m-%d"),
+                    # end_time    = item.endtime.strftime("%Y-%m-%d"),
+                    # if_valid    = item.isvalid,
+                    # if_hot      = item.ishot
                     title       = item.title,
                     location    = item.location,
                     activity_time = item.activitytime,
