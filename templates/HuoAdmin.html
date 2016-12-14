@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="http://cdn.bootcss.com/ionic/1.3.2/css/ionic.css" rel="stylesheet">
+    <title>小猴偷米社团活动审核</title>
+    <style type="text/css">
+        .content {
+            margin: 10px;
+            margin-top: 70px;
+        }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="bar bar-header bar-positive">
+        <h1 class="title">当前活动</h1>
+    </div>
+    <div class="content" overflow-scroll="false">
+        <div class="list" id="list">
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ajax({
+         url:'./admin_get',
+         type: 'GET', 
+         dataType: 'json',
+
+         success: function(data, textStatus, xhr){
+             if (data.code == 200)
+                 var acts = data.content;
+             else{
+                 alert("发生错误：" + data.code);
+                 window.location.href = "./login"
+             }
+
+             var list = $("#list");
+
+             $.each(acts, function(n, value){
+                var newDiv = $("<div></div>").appendTo(list);
+                newDiv.attr("class", "item item-thumbnail-left");
+
+                var img = $("<img/>").appendTo(newDiv);
+                img.attr("src", value.pic_url);
+                $("img:last").click(function(){
+                    window.location.href = value.pic_url;
+                });
+
+                var title = $("<h2></h2>").appendTo(newDiv);
+                title.html(value.title);
+
+                var intro = $("<p></p>").appendTo(newDiv);
+                intro.html(value.introduction);
+
+                var detail = $("<a></a>").appendTo(newDiv);
+                detail.attr("href", value.detail_url);
+                detail.html("详细信息");
+
+                var start = $("<p></p>").appendTo(newDiv);
+                start.html("开始时间：" + value.start_time);
+
+                var end = $("<p></p>").appendTo(newDiv);
+                end.html("终止时间：" + value.end_time);
+
+                var act_time = $("<p></p>").appendTo(newDiv);
+                act_time.html("活动时间：" + value.activity_time);
+
+                var hot = $("<p></p>").appendTo(newDiv);
+                if (value.if_hot)
+                    hot.html("是否热门：是");
+                else
+                    hot.html("是否热门：否");
+
+                var association = $("<p></p>").appendTo(newDiv);
+                association.html("承办组织：" + value.association);
+
+                var location = $("<p></p>").appendTo(newDiv);
+                location.html("活动地点：" + value.location);
+
+                var btn = $("<button></button>").appendTo(newDiv);
+                btn.attr("id", value.id);
+                if (value.if_valid){
+                    btn.attr("class", "button button-block button-assertive");
+                    btn.attr("value", "0");//0为下线活动，1为上线活动
+                    btn.html("下线此活动");
+                }
+                else{
+                    btn.attr("class", "button button-block button-positive");
+                    btn.attr("value", "1");
+                    btn.html("上线此活动");
+                }
+
+                $("#" + value.id).click(function(){
+                    $("#" + value.id).attr("disabled", "true");
+
+                    var hand = $("#" + value.id).attr("value");
+                    var actId = $("#" + value.id).attr("id");
+
+
+                    $.ajax({
+                        url:'./admin',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            activityId: actId,
+                            handle: hand
+                        },
+                        success: function(data, textStatus, xhr){
+                            if (data.code == 200){
+                                if (hand == 0){
+                                    btn.attr("class", "button button-block button-positive");
+                                    btn.attr("value", "1");
+                                    btn.removeAttr("disabled");
+                                    btn.html("上线此活动");
+                                }
+                                else{
+                                    btn.attr("class", "button button-block button-assertive");
+                                    btn.attr("value", "0");
+                                    btn.removeAttr("disabled");
+                                    btn.html("下线此活动");
+                                }
+                            }
+                            else{
+                                alert("发生错误：" + data.content);
+                                window.location.href = "./login";
+                            }
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            alert("网络连接异常");
+                            $("#" + actId).removeAttr("disabled");
+                        }
+                    });
+                });
+            });
+
+         },
+         error:function(xhr, textStatus, errorThrown){
+             alert("网络连接异常");
+             window.location.href = "./login";
+         }
+        });
+    });
+</script>
+
+</html>
