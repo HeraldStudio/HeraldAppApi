@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
-        <link href="//cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
+        <link href="http://cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
         <title>反馈</title>
     </head>
 
@@ -14,15 +14,41 @@
 		.list p {
 			padding-left: 10px;
 		}
+
+        h1.title {
+            color: #32465a !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            margin: 0 20px !important;
+        }
+
+        #bpad {
+            padding: 0 20px 20px 20px !important;
+        }
+
+        .list {
+            margin: 10px !important;
+            line-height: 14px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        label.item.item-input {
+            margin: 15px 10px;
+            border: 1px solid #f0f0f0;
+            border-radius: 5px;
+            padding: 7px 10px;
+        }
     </style>
- 
+
     <body>
-		
-		<div class="bar bar-header bar-positive">
+
+		<div class="bar bar-header">
 		  <h1 class="title">反馈</h1>
 		</div>
 		<div class="content has-header">
-			
+
 			<div class="list">
 				<p>我们希望您喊出您的心声</p>
 				<p>可以是对小猴的吐槽,可以是对小猴功能的idea</p>
@@ -33,18 +59,18 @@
 				<label class="item item-input">
 				    <textarea placeholder="反馈内容" class="feedback_content"></textarea>
 				</label>
-				
+
 			</div>
-			<div class="ionic padding">
+			<div class="ionic padding" id="bpad">
 				<p id="tips"></p>
-				<button class="button button-block button-positive" id="tell_xiaohou">告诉小猴</button>
+				<button class="button button-block" id="tell_xiaohou">告诉小猴</button>
 			</div>
 			<div>&nbsp;</div>
 		</div>
 		<div class="bar bar-footer bar-stable">
 		  <h1 class="title">小猴偷米</h1>
 		</div>
-	<script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+	<script src="http://cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 

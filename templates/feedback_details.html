@@ -3,36 +3,44 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=no"/>
-    <link href="//cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
-    <link href="//cdn.bootcss.com/jquery-mobile/1.4.0/jquery.mobile.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/ionic/1.3.0/css/ionic.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/jquery-mobile/1.4.0/jquery.mobile.min.css" rel="stylesheet">
     <style type="text/css">
-    .active {
-      color:#0066FF;
-      border-top-color: #0066FF;
-      border-top-width: 2px;
-      border-top-style: solid;
-    }
+        .active {
+            color:#0066FF;
+            border-top-color: #0066FF;
+            border-top-width: 2px;
+            border-top-style: solid;
+        }
+
+        h1.title {
+            color: #32465a !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            margin: 0 20px !important;
+        }
     </style>
     <title>反馈详情</title>
   </head>
   <body style="background-color: #EEEEEE">
-    <div class="bar bar-header bar-positive row" style="position: relative;">
+    <div class="bar bar-header row" style="position: relative;">
       <div class="col" style="text-align: center">
-        <p style="color:white;font-family:微软雅黑">反馈详情</p>
+        <h1 class="title">反馈详情</p>
       </div>
     </div>
     <div id="all">
         {% if len(data) < 1%}
-            <div id="card"  style="margin: 10px;">
-                    <div class="item item-text-wrap" style="border-radius: 10px">
+            <div id="card"  style="margin: 20px;">
+                    <div class="item item-text-wrap" style="border-radius: 5px">
                         <p>暂未有回复留言</p>
                     </div>
             </div>
         {% end %}
         {% for item in data %}
             {% if item.response %}
-                <div id="card"  style="margin: 10px;">
-                    <div class="item item-text-wrap" style="border-radius: 10px">
+                <div id="card"  style="margin: 20px;">
+                    <div class="item item-text-wrap" style="border-radius: 5px">
                         <p id="time" style="color:#BBBBBB;font-size: 10px">{{item.date}}</p>
                         <p id="question" style="font-size: 15px">
                         <i class="ion-ios-paperplane-outline"></i>：{{item.text}}</p>
@@ -44,15 +52,15 @@
     </div>
     <div id="my">
         {% if len(mydata) < 1%}
-            <div id="card"  style="margin: 10px;">
-                    <div class="item item-text-wrap" style="border-radius: 10px">
+            <div id="card"  style="margin: 20px;">
+                    <div class="item item-text-wrap" style="border-radius: 5px">
                         <p>暂未留言</p>
                     </div>
             </div>
         {% end %}
         {% for item in mydata %}
-            <div id="card"  style="margin: 10px;">
-                <div class="item item-text-wrap" style="border-radius: 10px">
+            <div id="card"  style="margin: 20px;">
+                <div class="item item-text-wrap" style="border-radius: 5px">
                     <p id="time" style="color:#BBBBBB;font-size: 10px">{{item.date}}</p>
                     <p id="question" style="font-size: 15px">
                         <i class="ion-ios-paperplane-outline"></i>：{{item.text}}
@@ -76,7 +84,7 @@
         我的反馈
       </a>
     </div>
-    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($){
             $("#my").hide();
