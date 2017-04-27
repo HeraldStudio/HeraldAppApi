@@ -171,6 +171,29 @@ class TopicAdmin(Base):
     password = Column(VARCHAR(32), nullable = False)
     token = Column(VARCHAR(64))
 
+class SlideViews(Base):
+    """
+    轮播图模块
+    """
+    __tablename__ = 'slideviews'
+    id = Column(Integer, primary_key=True)
+    title = Column(VARCHAR(1024))
+    imageurl = Column(VARCHAR(1024))
+    url = Column(VARCHAR(1024))
+    begin_time = Column(DateTime)
+    end_time = Column(DateTime)
+    hit_count = Column(Integer)  # 轮播推送到的次数
+
+class PushMessage(Base):
+    __tablename__ = 'pushmessages'
+    id = Column(Integer, primary_key=True)
+    content = Column(VARCHAR(1024))
+    url = Column(VARCHAR(1024))
+    schoolnum = Column(VARCHAR(1024))  # 用于针对某一特定用户的推送
+    versiontype = Column(VARCHAR(1024))  # 用于针对某一特定平台的推送
+    priority = Column(Integer)  # 用于指定推送匹配的优先级顺序
+    hit_count = Column(Integer)  # 推送匹配到的次数
+
 class DayLogAnalyze(Base):
     """
     每日日志重要信息记录
@@ -178,13 +201,13 @@ class DayLogAnalyze(Base):
     __tablename__     = "DayLogAnalyze"
     id                = Column(Integer       , nullable = False                       , primary_key = True)
     date              = Column(VARCHAR(32)   , nullable = False) # 表项名称access_api.log-date
-    api_order         = Column(VARCHAR(10800) , nullable = False) # 该日Api请求数目(保留前20)
-    ip_order          = Column(VARCHAR(10800) , nullable = False) # 该日ip请求数目(保留前30)
+    api_order         = Column(VARCHAR(1080) , nullable = False) # 该日Api请求数目(保留前20)
+    ip_order          = Column(VARCHAR(1080) , nullable = False) # 该日ip请求数目(保留前30)
     every_hour_count  = Column(VARCHAR(1024) , nullable = False) # 该日每小时访问量
-    device_distribute = Column(VARCHAR(10800) , nullable = False) # 该日发送请求的设备分布
+    device_distribute = Column(VARCHAR(1080) , nullable = False) # 该日发送请求的设备分布
     call_count        = Column(Integer       , nullable = False) # 该日请求次数
-    ios_version       = Column(VARCHAR(10800) , nullable = True)  # ios设备版本分布
-    android_version   = Column(VARCHAR(10800) , nullable = True)  # android设备版本分布
+    ios_version       = Column(VARCHAR(1080) , nullable = True)  # ios设备版本分布
+    android_version   = Column(VARCHAR(1080) , nullable = True)  # android设备版本分布
 
 
 
