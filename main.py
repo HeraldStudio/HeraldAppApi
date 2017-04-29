@@ -16,6 +16,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from mod.auth.login import LoginHandler
 from mod.auth.registerHandler import RegisterHandler
 from mod.huati.TopicHandler import TopicHandler
+from mod.slideviews.SlideViewsHandler import SlideViewsHandler
 from mod.yuyue.yuyueHandler import YuyueHandler
 from mod.databases.db import engine
 
@@ -50,6 +51,7 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/auth/login',LoginHandler),
             (r'/herald/api/v1/auth/reg',RegisterHandler),
             (r'/herald/api/v1/yuyue',YuyueHandler),
+            (r'/herald/api/v1/slideviews', SlideViewsHandler),
             (r'/herald/api/v1/huodong/get',getHuodong),
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),
