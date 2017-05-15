@@ -7,6 +7,8 @@
 ```bash
 cp config.py.example config.py                      # 配置信息
 cp mod/databases/db.py.example mod/databases/db.py  # 数据库信息
+
+cp mod/slideviews/SlideViewsConfig.py.example mod/slideviews/SlideViewsConfig.py  # 轮播图配置信息
 ```
 
 # Attention: 请勿随意修改config.py与db.py, 如若修改, 请确保example文件同时进行了修改
