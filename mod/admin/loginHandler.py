@@ -33,7 +33,7 @@ class AdminLoginHandler(ManagerHandler):
                     cache.update([(key, admin.name)])
                 else:
                     retjson['code'] = 400
-                    retjson['content'] = u'密码错误'
+                    retjson['content'] = u'用户名或密码错误'
             except NoResultFound:
                 retjson['code'] = 301
                 retjson['content'] = u'用户不存在'
