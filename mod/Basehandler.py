@@ -2,7 +2,9 @@
 #!/usr/bin/env python
 import tornado.web
 from databases.tables import Access_Token,Users,ExpressAdmin
+from cache.cache import cache
 import json
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -14,7 +16,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def options(self):
         retjson = {'code':200}
         self.write_back(retjson)
-        
+
     @property
     def db(self):
         return self.application.db
@@ -48,3 +50,15 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Headers','token,Expressadmin')
         self.write(json.dumps(content,ensure_ascii=False, indent=2))
         self.finish()
+
+class ManagerHandler(BaseHandler):
+    def get_current_user(self):
+        key = self.get_secure_cookie("key")
+        if key:
+            key = bytes.decode(key)
+            if key in cache.keys():
+                return cache[key]
+            else:
+                return None
+        else:
+            return None

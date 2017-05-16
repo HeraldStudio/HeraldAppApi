@@ -8,7 +8,7 @@ import json
 from sqlalchemy import desc
 from tornado import gen
 from tornado.httpclient import HTTPRequest, AsyncHTTPClient
-from mod.Basehandler import BaseHandler
+from mod.Basehandler import ManagerHandler
 from mod.databases.tables import SlideViews
 
 import io
@@ -30,11 +30,13 @@ class ArgumentExceptions(RuntimeError):
         self.code = code
         self.content = content
 
-class SlideViewsHandler(BaseHandler):
+
+class SlideViewsHandler(ManagerHandler):
 
     def get(self):
         self.write('herald webservice!')
 
+    @tornado.web.authenticated
     @gen.coroutine
     def post(self):
         ask_code = self.get_argument('askcode', default = 'unsolved')

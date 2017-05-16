@@ -10,38 +10,37 @@ vim: set ts=4 sw=4 tw=99 et:
 
 import os
 import tornado
-from tornado.options import define, options
 from sqlalchemy.orm import scoped_session, sessionmaker
+from tornado.options import define, options
 
+from mod.admin.feedbackHandler import FeedbackHandler
+from mod.admin.loginHandler import AdminLoginHandler
+from config import COOKIE_SECRET
 from mod.auth.login import LoginHandler
 from mod.auth.registerHandler import RegisterHandler
-from mod.huati.TopicHandler import TopicHandler
-from mod.slideviews.SlideViewsHandler import SlideViewsHandler
-from mod.yuyue.yuyueHandler import YuyueHandler
 from mod.databases.db import engine
-
-from mod.huodong.getHuodong import getHuodong
+from mod.emptyroom.handler import NewGetHandler
+from mod.emptyroom.oldHandler import SimpleHander, ComplexHander
+from mod.huati.TopicHandler import TopicHandler
 from mod.huodong.HuodongCommit import HuodongCommit
 from mod.huodong.HuodongLogin import HuodongLogin
-from mod.huodong.upload import UploadPichandler
-from mod.huodong.adminHuodong import AdminHuodong
 from mod.huodong.adminGetHuodong import AdminGetHuodong
-
+from mod.huodong.adminHuodong import AdminHuodong
+from mod.huodong.getHuodong import getHuodong
+from mod.huodong.upload import UploadPichandler
+from mod.kuaidi.adminLogin import ExpressAdminLoginHandler
 from mod.kuaidi.deleteRecord import DeleteRecordHandler
 from mod.kuaidi.getTimeList import GetTimeListHandler
 from mod.kuaidi.modifyState import ModifyStateHandler
 from mod.kuaidi.queryAll import QueryHandler
 from mod.kuaidi.queryByCardnum import QueryByCardnumHandler
 from mod.kuaidi.submit import SubmitHandler
-from mod.kuaidi.adminLogin import ExpressAdminLoginHandler
-from mod.emptyroom.handler import NewGetHandler
-from mod.emptyroom.oldHandler import SimpleHander, ComplexHander
-from mod.service.feedbackHandler import FeedBackHandler, \
-                                        FeedBackSuccessHandler, \
-                                        FeedBackDetailsHandler
 from mod.log.LogHandler import LogHandler
-
-from config import COOKIE_SECRET
+from mod.service.feedbackHandler import FeedBackHandler, \
+    FeedBackSuccessHandler, \
+    FeedBackDetailsHandler
+from mod.slideviews.SlideViewsHandler import SlideViewsHandler
+from mod.yuyue.yuyueHandler import YuyueHandler
 
 define("port", default=7000, help="run on the given port", type=int)
 
@@ -52,6 +51,8 @@ class Application(tornado.web.Application):
             (r'/herald/api/v1/auth/reg',RegisterHandler),
             (r'/herald/api/v1/yuyue',YuyueHandler),
             (r'/herald/api/v1/slideviews', SlideViewsHandler),
+            (r'/herald/api/v1/admin/feedback',FeedbackHandler),
+            (r'/herald/api/v1/admin/login',AdminLoginHandler),
             (r'/herald/api/v1/huodong/get',getHuodong),
             (r'/herald/api/v1/huodong/commit',HuodongCommit),
             (r'/herald/api/v1/huodong/login',HuodongLogin),

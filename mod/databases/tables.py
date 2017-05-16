@@ -209,3 +209,11 @@ class DayLogAnalyze(Base):
     call_count        = Column(Integer       , nullable = False) # 该日请求次数
     ios_version       = Column(VARCHAR(1080) , nullable = True)  # ios设备版本分布
     android_version   = Column(VARCHAR(1080) , nullable = True)  # android设备版本分布
+
+class Admin(Base):
+    __tablename__ = 'admin'
+    id  = Column(Integer,primary_key=True)
+    name = Column(VARCHAR(200),nullable=False)
+    privilege = Column(Integer,nullable=False)
+    pwd = Column(VARCHAR(64),nullable=False)
+    salt = Column(VARCHAR(64),nullable=False)
