@@ -51,6 +51,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.write(json.dumps(content,ensure_ascii=False, indent=2))
         self.finish()
 
+
 class ManagerHandler(BaseHandler):
     def get_current_user(self):
         key = self.get_secure_cookie("key")
