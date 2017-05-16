@@ -4,7 +4,7 @@
 # @Author  : higuoxing@outlook.com
 
 MAX_FILE_SIZE = 10000000
-PIC_LENGTH = 658
-PIC_WIDTH = 253
+PIC_LENGTH = 1080
+PIC_WIDTH = 432
 GET_TOKEN_URL = "http://******"
 TIME_OUT = 600
