@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>可视日志</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li>
+                    <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">首页</span> </a>
+                </li>
+                <li>
+                    <a href="log.html"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">可视日志</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">轮播图管理</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-group"></i> <span class="nav-label">活动信息</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-envelope"></i> <span class="nav-label">用户推送</span></a>
+                </li>
+                <li>
+                    <a href="feedback.html"><i class="fa fa-table"></i> <span class="nav-label">用户反馈</span></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+                        <div class="form-group">
+                            <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope"></i>  <span class="label label-warning"></span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell"></i>  <span class="label label-primary"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <style>
+
+            body{
+                font-family:"Microsoft YaHei",
+                Helvetica, Arial,"Hiragino Sans GB",
+                "Source Han Sans CN", sans-serif;
+            }
+
+            header{
+                text-align: center;
+                font-size: 2em;
+            }
+
+            h1{
+                font-size: 2em;
+            }
+
+            .main-container{
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                max-width: 1000px;
+            }
+
+            .container{
+                width: 100%;
+                height: 500px;
+                margin-top: 50px;
+            }
+
+            footer{
+                margin-top: 50px;
+                color: #999;
+                text-align: center;
+            }
+
+            @media screen and (max-width: 400px) {
+                body{
+                    font-size: 8px;
+                }
+
+                .main-container{
+                    width: 100%;
+                }
+
+                .container{
+                    height: 200px;
+                }
+
+                #ios_version{
+                    height: 500px;
+                }
+            }
+
+        </style>
+        <div class="main-container">
+            <div id="week" class="container"></div>
+            <h1 id='title'></h1>
+            <div id="api_order" class="container"></div>
+            <div id="ios_version" class="container"></div>
+            <div id="android_version" class="container"></div>
+            <div id="hour" class="container"></div>
+            <div id="device_distribute" class="container"></div>
+        </div>
+
+        <script src="js/echarts.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/log.js"></script>
+        <div class="footer">
+            <div>
+                <strong>Copyright</strong> Example Company &copy; 2014-2015
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Mainly scripts -->
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="js/plugins/dataTables/dataTables.responsive.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function() {
+        $('.dataTables-example').dataTable({
+            responsive: true
+        });
+
+        /* Init DataTables */
+        var oTable = $('#editable').dataTable();
+
+        /* Apply the jEditable handlers to the table */
+        oTable.$('td').editable( '../example_ajax.php', {
+            "callback": function( sValue, y ) {
+                var aPos = oTable.fnGetPosition( this );
+                oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+            },
+            "submitdata": function ( value, settings ) {
+                return {
+                    "row_id": this.parentNode.getAttribute('id'),
+                    "column": oTable.fnGetPosition( this )[2]
+                };
+            },
+
+            "width": "90%",
+            "height": "100%"
+        } );
+
+
+    });
+
+    function fnClickAddRow() {
+        $('#editable').dataTable().fnAddData( [
+            "Custom row",
+            "New row",
+            "New row",
+            "New row",
+            "New row" ] );
+
+    }
+</script>
+</body>
+
+</html>

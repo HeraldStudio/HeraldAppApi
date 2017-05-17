@@ -6,6 +6,7 @@ from math import ceil
 from mod.Basehandler import ManagerHandler
 from mod.databases.feedback import FeedBack
 from sqlalchemy.orm.exc import NoResultFound
+import tornado.escape as escape
 
 class ArgumentExceptions(RuntimeError):
     def __init__(self,code,content):
@@ -37,7 +38,7 @@ class FeedbackHandler(ManagerHandler):
                 for fb in FB:
                     tmp=dict(
                         id   =fb.id,
-                        text = fb.text,
+                        text = escape.xhtml_escape(fb.text),#进行转义，防止xss
                         date = str(fb.date),
                         user = fb.user,
                         response = fb.response,
