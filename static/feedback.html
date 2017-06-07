@@ -20,7 +20,7 @@
 
 </head>
 
-<body>
+<body onload="query(1)">
 
 <div id="wrapper">
 
@@ -34,7 +34,7 @@
                     <a href="log.html"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">可视日志</span></a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">轮播图管理</span></a>
+                    <a href="slideviews.html"><i class="fa fa-picture-o"></i> <span class="nav-label">轮播图管理</span></a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-group"></i> <span class="nav-label">活动信息</span></a>
@@ -108,7 +108,17 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-
+                            <div class="col-sm-6">
+                                <div class="dataTables_length" id="DataTables_Table_0_length">
+                                    <label>
+                                        <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-control input-sm" id="select">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select> records per page</label>
+                                </div>
+                            </div>
                             <table class="table table-striped table-bordered table-hover dataTables-example" >
                                 <thead>
                                 <tr>
@@ -125,7 +135,7 @@
                                 <tfoot>
                                 </tfoot>
                             </table>
-                            <button onclick="query()" class="btn btn-w-m btn-primary"><p>查看反馈</p></button>
+                            <ul class="pagination pagination-centered" id="page"></ul>
                         </div>
 
                     </div>
@@ -160,19 +170,27 @@
 <script src="js/plugins/pace/pace.min.js"></script>
 
 <!-- Page-Level Scripts -->
-
+<script>
+    $("#select").change(function(){
+        query(1);
+    });
+</script>
 <script  type="text/javascript">
-    function query() {
+    function query(index) {
         $.ajax({
             type: "post",
             url: "/herald/api/v1/admin/feedback",
             data: {
-                askcode: 101
+                askcode: 101,
+                items_per_page:$("#select").val(),
+                page:index,
             },
             success: function (data) {
                 result = eval("(" + data + ")");
                 if (result.code === 200) {
                     var content=result.content;
+                    var npage=result.now_page;
+                    var mpage=result.max_page;
                     var text="";
                     for(i=0;i<content.length;i++){
                         text+="<tr class=\"gradeX\"> <td>"+content[i].id+
@@ -181,17 +199,27 @@
                             content[i].user+"</td> <td class=\"center\">";
                         if(content[i].responsive)
                             text+=content[i].responsive+"</td> </tr>";
-                        else text+="尚未回复</td> </tr>"
+                        else text+="尚未回复</td> </tr>";
                     }
                     $("#table").html(text);
+                    $("#page").children().remove()
+                    if(npage != 1)
+                        $("#page").html("<li><a href='javascript:void(0)' onclick='query("+(npage-1)+")'>Prev</a></li>");
+                    for(i = npage-5 > 0?npage-5:1;i <= (mpage>npage+5?npage+5:mpage);i++){
+                        if(i!=npage)
+                            $("#page").append(" <li><a href='javascript:void(0)' onclick='query("+i+")'>"+i+"</a></li>");
+                        else
+                            $("#page").append(" <li class='active'><a href='javascript:void(0)' onclick='query("+i+")'>"+i+"</a></li>");
+                    }
+                    if(npage != mpage)
+                        $("#page").append("<li><a href='javascript:void(0)' onclick='query("+(npage+1)+")'>Next</a></li>");
                 }
                 else alert(result.content)
             },
             error: function (XHR, textStatus, errorThrown) {
-                /*弹出jqXHR对象的信息*/
                 if(XHR.status==403)
                     alert("请登录！")
-                     window.location.href = "login.html";
+                window.location.href = "login.html";
             }
         });
     };

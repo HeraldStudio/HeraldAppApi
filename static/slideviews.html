@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>用户反馈</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+
+    <link href="css/plugins/dropzone/basic.css" rel="stylesheet">
+    <link href="css/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body onload="query()">
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li>
+                    <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">首页</span> </a>
+                </li>
+                <li>
+                    <a href="log.html"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">可视日志</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">轮播图管理</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-group"></i> <span class="nav-label">活动信息</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-envelope"></i> <span class="nav-label">用户推送</span></a>
+                </li>
+                <li>
+                    <a href="feedback.html"><i class="fa fa-table"></i> <span class="nav-label">用户反馈</span></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+                        <div class="form-group">
+                            <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope"></i>  <span class="label label-warning"></span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell"></i>  <span class="label label-primary"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="logout">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row" id="pic"></div>
+        </div>
+        <div class="footer">
+            <div>
+                <strong>Copyright</strong> Example Company &copy; 2014-2015
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="js/plugins/dropzone/dropzone.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+<script src="js/jquery.form.js"></script>
+<!-- Page-Level Scripts -->
+<script>
+
+</script>
+<script  type="text/javascript">
+
+    function query() {
+        $.ajax({
+            type: "post",
+            url: "/herald/api/v1/slideviews",
+            data: {
+                askcode: 104
+            },
+            success: function (data) {
+                result = eval("(" + data + ")");
+                //console.log(typeof(result.content))
+                if (result.code === 200) {
+                    var content=result.content;
+                    var text="";
+                    for(i=content.length-1;i>=0;i--){
+
+                        text+="<div class='col-lg-6' id='"+content[i].Id+"'> " +
+                            "<div class=\"ibox float-e-margins\">" +
+                            "<div class=\"ibox-title\"> " +
+                            "<h5>" +
+                            content[i].title
+                            +"</h5>" +
+                            "<div class=\"ibox-tools\"> " +
+                                "<a class=\"collapse-link\"> <i class=\"fa fa-chevron-up\"></i> " +
+                                "</a> " +
+                                "<a class=\"fa fa-plus\"></a> " +
+                            "<a class=\"close-link\"> <i class=\"fa fa-times\"></i></a>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class=\"ibox-content\">" +
+                            "<div class=\"carousel slide\" id=\"carousel1\">" +
+                            "<div class=\"carousel-inner\">" +
+                            "<div class=\"item active\"> " +
+                            "<img alt=\"image\" class=\"static/img-circle\" src=\""+content[i].image_url+ "\"/> " +
+                            '<div class="hr-line-dashed"></div>' +
+                            '<form id="form" action="/herald/api/v1/slideviews" method="post" class="form-horizontal">' +
+                            '<div class="form-group">' +
+                            '<label class="col-sm-2 control-label">活动标题</label>' +
+                            '<div class="col-sm-10">' +
+                            '<input type="text" class="form-control" name="title" value="'+content[i].title+'">' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="hr-line-dashed"></div>' +
+                            '<div class="form-group">' +
+                            '<label class="col-sm-2 control-label">活动链接</label>' +
+                            '<div class="col-sm-10">' +
+                            '<input type="text" class="form-control" name="url" value="'+content[i].url+'">' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="hr-line-dashed"></div>' +
+                            '<div class="form-group">' +
+                            "<label class='col-sm-2 control-label'>有效时间</label>" +
+                            "<div class='input-daterange input-group' id='datepicker'> " +
+                            "<input class='form-control' name='begintime' value='"+content[i].begin_time+"' type='text'> " +
+                            "<span class='input-group-addon'>to</span>" +
+                            "<input class='form-control' name='endtime' value='"+content[i].end_time+"' type='text'>" +
+                            '<input class="hidden" name="askcode" value="103" type="text">' +
+                            '<input class="hidden" name="id" value="'+content[i].Id+'" type="text">' +
+                            "</div>" +
+                            "</div>"+
+                            '<div class="hr-line-dashed"></div>' +
+                            '<button type="submit" class="btn btn-primary pull-right" onclick="return add()">修改轮播图</button>' +
+                            '</form>'+
+                            "</div> </div></div></div></div></div>"
+                        /*
+                         "<a class=\"fancybox\" href=\""+content[i].image_url+"\"title=\"Picture 1\">" +
+                         "<img alt=\"image\" src="+content[i].image_url+"> </a>"
+                         /*"<tr class=\"gradeX\"> <td>"+content[i].title+
+                         "</td> <td>"+content[i].begin_time+
+                         "</td> <td>"+content[i].end_time+"</td> <td >"+
+                         content[i].url+"</td> <td class=\"center\">"+"<a class=\"fancybox\" href=\""+content[i].image_url+"\"title=\"Picture 1\">" +
+                         "<img alt=\"image\" src="+content[i].image_url+"> </a>"+"</td>"+"</tr>"*/
+                    }
+                    $("#pic").html(text);
+                    $('a.close-link').click(function(){
+                        delet($(this).parents(".col-lg-6").attr("id"));
+                    });
+                    $("a.fa-plus").click(function(){
+                        $("#pic").html(h);
+                    });
+                    $('.collapse-link').click( function() {
+                        var ibox = $(this).closest('div.ibox');
+                        var button = $(this).find('i');
+                        var content = $(this).parents('.ibox-title').next('div.ibox-content');
+                        content.slideToggle(200);
+                        button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+                        ibox.toggleClass('').toggleClass('border-bottom');
+                        setTimeout(function () {
+                            ibox.resize();
+                            ibox.find('[id^=map-]').resize();
+                        }, 50);
+                    });
+
+                }
+                else alert(result.content)
+            },
+            error: function (XHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+                if(XHR.status==403) {
+                    alert("请登录！")
+                    window.location.href = "login.html";
+                }
+            }
+        });
+    };
+
+    function delet(id) {
+        var r=confirm("确定要删除这条轮播图么？");
+        if (r==true) {
+            $.ajax({
+                type: "post",
+                url: "/herald/api/v1/slideviews",
+                data: {
+                    askcode: 102,
+                    id: id,
+                },
+                success: function (data) {
+                    result = eval("(" + data + ")");
+                    if (result.code == 200)
+                        $("#" + id).remove();
+                    else alert(result.content);
+                },
+                error: function (XHR, textStatus, errorThrown) {
+                    /*弹出jqXHR对象的信息*/
+                    if (XHR.status == 403) {
+                        alert("请登录！")
+                        window.location.href = "login.html";
+                    }
+                }
+            });
+        }
+    };
+
+    function add(){
+        var options = {
+            success: function(data){
+                result = eval("(" + data + ")");
+                if (result.code == 200)
+                    query();
+                alert(result.content);
+            }
+        }
+        $("#form").ajaxSubmit(options);
+        return false;
+    }
+
+    var h = '<div class="col-lg-12"> ' +
+        '<div class="ibox float-e-margins"> ' +
+        '<div class="ibox-title"> ' +
+        '<div class="ibox-tools"> ' +
+        '<a class="collapse-link"> ' +
+        '<i class="fa fa-chevron-up"></i> ' +
+        '</a> ' +
+        '<a class="fa fa-arrow-left"  onclick="query()"> ' +
+        '</a> ' +
+        '<a class="close-link"> ' +
+        '<i class="fa fa-times"></i> ' +
+        '</a> ' +
+        '</div> ' +
+        '</div> ' +
+        '<div class="ibox-content"> ' +
+        '<form id="form"  action="/herald/api/v1/slideviews" method="post" enctype="multipart/form-data" class="form-horizontal"> ' +
+        '<div class="form-group"><label class="col-sm-2 control-label">活动标题</label> ' +
+        '<div class="col-sm-10"><input type="text" class="form-control" name="title"></div> ' +
+        '</div> ' +
+        '<div class="hr-line-dashed"></div> ' +
+        '<div class="form-group"><label class="col-sm-2 control-label">活动链接</label> ' +
+        '<div class="col-sm-10"><input type="text" class="form-control" name="url"></div>'+
+        '</div>'+
+        '<div class="hr-line-dashed"></div>'+
+        '<div class="form-group">'+
+        '<label class="font-noraml col-sm-2 control-label">有效时间</label>'+
+        '<div class="input-daterange input-group" id="datepicker">'+
+        '<input class="input-sm form-control" name="begintime" type="text">'+
+        '<span class="input-group-addon">to</span>'+
+        '<input class="input-sm form-control" name="endtime" type="text">'+
+        '<input class="hidden" name="askcode" value="101" type="text">'+
+        '</div>'+
+        '</div>'+
+        '<div class="hr-line-dashed"></div>'+
+        '<button type="submit" class="btn btn-primary pull-right" onclick="return add()">添加轮播图</button>'+
+        '<input type="file" name="file">'+
+        '</form>'+
+        '</div>'+
+        '</div>'+
+        '</div>'
+
+</script>
+<script>
+
+</script>
+</body>
+</html>
+

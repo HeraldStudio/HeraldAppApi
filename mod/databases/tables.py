@@ -182,7 +182,7 @@ class SlideViews(Base):
     url = Column(VARCHAR(1024))
     begin_time = Column(DateTime())
     end_time = Column(DateTime())
-    key = Column(VARCHAR(1024))
+    #key = Column(VARCHAR(1024))
     hit_count = Column(Integer)  # 轮播推送到的次数
 
 class PushMessage(Base):

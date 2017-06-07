@@ -10,14 +10,14 @@ from tornado import gen
 from tornado.httpclient import HTTPRequest, AsyncHTTPClient
 from mod.Basehandler import ManagerHandler
 from mod.databases.tables import SlideViews
-
+import IPython
 import io
 import datetime
 from PIL import Image
 from qiniu import put_data
 from mod.slideviews.SlideViewsConfig import *
 from sqlalchemy.orm.exc import NoResultFound
-
+import IPython
 class UploadExceptions(RuntimeError):
 
     def __init__(self, code, content):
@@ -39,12 +39,10 @@ class SlideViewsHandler(ManagerHandler):
     @tornado.web.authenticated
     @gen.coroutine
     def post(self):
-
         retjson = {
             'code': 400,
             'content': u'系统错误'
         }
-        
         askcode = self.get_argument('askcode', default = 'unsolved')
 
         if askcode == '101':
@@ -84,7 +82,7 @@ class SlideViewsHandler(ManagerHandler):
                         response = yield http_client.fetch(GET_TOKEN_URL)
                         token = json.loads(response.body)
                         print token
-                        #ret, info = put_data(token['token'], token['key'], meta['body'])
+                        ret, info = put_data(token['token'], token['key'], meta['body'])
                         image_url = token['domain'] + token['key']
                         slideviewsdb = SlideViews(
                             title = title,
@@ -92,7 +90,8 @@ class SlideViewsHandler(ManagerHandler):
                             url = None,
                             begin_time = begin_time,
                             end_time = end_time,
-                            key = token['key']
+                            hit_count=0,
+                            #key = token['key']
                             )
                         try:
                             self.db.add(slideviewsdb)
@@ -208,9 +207,9 @@ class SlideViewsHandler(ManagerHandler):
                         title       = item.title,
                         image_url   = item.imageurl,
                         url         = item.url,
-                        begin_time  = item.begin_time,
-                        end_time    = item.end_time,
-                        Key         = item.key,
+                        begin_time  = str(item.begin_time),
+                        end_time    = str(item.end_time),
+                        #Key         = item.key,
                         hit_count   = item.hit_count,
                     )
                     ret_data.append(tmp)
@@ -222,7 +221,7 @@ class SlideViewsHandler(ManagerHandler):
                 lower_num = (page - 1) * items_per_page
                 larger_num = min((page) * items_per_page, page * items_per_page + \
                    len(ret_data) % items_per_page)
-                retjson['content'] = str(ret_data[lower_num:larger_num])
+                retjson['content'] = ret_data[lower_num:larger_num]
                 retjson['max_page'] = total_page - 1
 
             except ArgumentExceptions as e:
@@ -254,7 +253,7 @@ class SlideViewsHandler(ManagerHandler):
                         url         = item.url,
                         begin_time  = item.begin_time,
                         end_time    = item.end_time,
-                        Key         = item.key,
+                        #Key         = item.key,
                         hit_count   = item.hit_count,
                     )
                     ret_data.append(tmp)

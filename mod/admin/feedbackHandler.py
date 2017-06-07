@@ -26,13 +26,13 @@ class FeedbackHandler(ManagerHandler):
         if ask_code=='101':
             offset=int(self.get_argument('page',1))-1
             limit=float(self.get_argument('items_per_page',20))
-
             try:
                 if offset<0 or limit<=0:
                     raise ArgumentExceptions(400,u'请求参数错误')
                 ret['max_page'] = int(ceil(self.db.query(FeedBack).count() / limit))
                 if offset>ret['max_page']-1:
                     raise ArgumentExceptions(400,u'页数超出范围')
+                ret['now_page']=offset+1;
                 FB=self.db.query(FeedBack).group_by(FeedBack.date.desc()).limit(limit).offset(offset*limit).all()
                 data=[]
                 for fb in FB:
