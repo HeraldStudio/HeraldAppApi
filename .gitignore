@@ -9,7 +9,7 @@ HeraldAppApi.iml
 
 ### 数据库相关
 mod/databases/db.py
-
+mod/slideviews/SlideViewsConfig.py.example
 ### 配置文件相关
 config.py
 
