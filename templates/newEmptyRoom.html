@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+	<link href="//cdn.bootcss.com/jquery-mobile/1.4.2/jquery.mobile.min.css" rel="stylesheet">
         <title>空闲教室查询</title>
     </head>
     <body>
@@ -197,12 +197,11 @@ float:left;
         
         
     </div>
-
-    <script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-mobile/1.4.2/jquery.mobile.min.js"></script>
     <script type="text/javascript">
 
-        var termId = 10;//学期号
+        var termId = 18;//学期号
         var termInfo = {
 
         }
@@ -277,6 +276,7 @@ float:left;
                             changeWeek($(this).val());
                         });
                     } else {
+			console.log(data)
                         $.mobile.loading('show', {theme:"b", text:"后台接口错误", textonly:true, textVisible: true});
                          setTimeout(function(){
                             $.mobile.loading('hide');
@@ -324,8 +324,8 @@ float:left;
                      },2000)
                  }
                });
-               
             }
+
             function saveData(page,pageSize,campusId,buildingId,startWeek,endWeek,dayOfWeek,startSequence,endSequence,termId){
                 queryData.page = page;
                 queryData.pageSize = pageSize;
@@ -421,12 +421,7 @@ float:left;
                     },2000);
                   }
                 });
-                
             }
-
-            
-
-           
         });
     </script>
     </body>
